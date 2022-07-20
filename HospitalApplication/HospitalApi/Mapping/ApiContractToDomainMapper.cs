@@ -13,7 +13,15 @@ public static class ApiContractToDomainMapper
             Id = PatientId.From(Guid.NewGuid()),
             Email = EmailAddress.From(request.Email),
             Username = Username.From(request.Username),
-            FullName = FullName.From(request.FullName),
+            FirstName = FirstName.From(request.FirstName),
+            Surname = Surname.From(request.Surname),
+            Adress = Adress.From(request.Adress),
+            BloodType = BloodType.From(request.BloodType),
+            Gender = Gender.From(request.Gender),
+            Height = Height.From(request.Height),
+            Weight = Weight.From(request.Weight),
+            PersonalNumber = PersonalNumber.From(request.PersonalNumber),
+            PhoneNumber = PhoneNumber.From(request.PhoneNumber),
             DateOfBirth = DateOfBirth.From(DateOnly.FromDateTime(request.DateOfBirth))
         };
     }
@@ -25,7 +33,15 @@ public static class ApiContractToDomainMapper
             Id = PatientId.From(request.Id),
             Email = EmailAddress.From(request.Email),
             Username = Username.From(request.Username),
-            FullName = FullName.From(request.FullName),
+            FirstName = FirstName.From(request.FirstName),
+            Surname = Surname.From(request.Surname),
+            Adress = Adress.From(request.Adress),
+            BloodType = BloodType.From(request.BloodType),
+            Gender = Gender.From(request.Gender),
+            Height = Height.From(request.Height),
+            Weight = Weight.From(request.Weight),
+            PersonalNumber = PersonalNumber.From(request.PersonalNumber),
+            PhoneNumber = PhoneNumber.From(request.PhoneNumber),
             DateOfBirth = DateOfBirth.From(DateOnly.FromDateTime(request.DateOfBirth))
         };
     }

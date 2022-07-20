@@ -12,7 +12,15 @@ public static class DomainToDtoMapper
             Id = patient.Id.Value.ToString(),
             Email = patient.Email.Value,
             Username = patient.Username.Value,
-            FullName = patient.FullName.Value,
+            FirstName = patient.FirstName.Value,
+            Surname = patient.Surname.Value,
+            BloodType = patient.BloodType.Value,
+            Weight = patient.Weight.Value,
+            Height = patient.Height.Value,
+            Adress = patient.Adress.Value,
+            Gender = patient.Gender.Value,
+            PersonalNumber = patient.PersonalNumber.Value,
+            PhoneNumber = patient.PhoneNumber.Value,
             DateOfBirth = patient.DateOfBirth.Value.ToDateTime(TimeOnly.MinValue)
         };
     }

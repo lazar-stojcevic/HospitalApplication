@@ -14,7 +14,6 @@ public class UpdatePatientRequest
     public double Height { get; init; } = default!;
     public string BloodType { get; init; } = default!;
     public string PhoneNumber { get; init; } = default!;
-    public string FullName { get; init; } = default!;
     public string Email { get; init; } = default!;
     public DateTime DateOfBirth { get; init; }
 }

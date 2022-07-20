@@ -5,14 +5,14 @@ using ValueOf;
 
 namespace HospitalApi.Domain.Common;
 
-public class BloodType : ValueOf<string, FullName>
+public class BloodType : ValueOf<string, BloodType>
 {
-    private static readonly Regex FullNameRegex =
+    private static readonly Regex BloodTypeRegex =
         new("^(A|B|AB|0)[+-]$", RegexOptions.Compiled | RegexOptions.IgnoreCase);
 
     protected override void Validate()
     {
-        if (!FullNameRegex.IsMatch(Value))
+        if (!BloodTypeRegex.IsMatch(Value))
         {
             var message = $"{Value} is not a valid bloodType";
             throw new ValidationException(message, new[]
