@@ -1,4 +1,4 @@
-﻿using HospitalApi.Domain.Common;
+﻿using HospitalApi.Domain.Common.Patient;
 
 namespace HospitalApi.Domain;
 

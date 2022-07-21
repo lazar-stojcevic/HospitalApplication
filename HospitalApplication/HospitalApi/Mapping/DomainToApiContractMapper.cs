@@ -1,4 +1,5 @@
-﻿using HospitalApi.Contracts.Responses;
+﻿using HospitalApi.Contracts.Responses.Financial;
+using HospitalApi.Contracts.Responses.Patient;
 using HospitalApi.Domain;
 
 namespace HospitalApi.Mapping;
@@ -25,6 +26,17 @@ public static class DomainToApiContractMapper
         };
     }
 
+    public static AccountResponse ToAccountResponse(this Account account)
+    {
+        return new AccountResponse
+        {
+            Id = account.Id.Value,
+            AccountNumber = account.AccountNumber.Value,
+            Balance = account.Balance.Value,
+            PatientId = account.PatientId.Value,
+        };
+    }
+
     public static GetAllPatientsResponse ToPatientsResponse(this IEnumerable<Patient> patients)
     {
         return new GetAllPatientsResponse
@@ -44,6 +56,20 @@ public static class DomainToApiContractMapper
                 PersonalNumber = x.PersonalNumber.Value,
                 PhoneNumber = x.PhoneNumber.Value,
                 DateOfBirth = x.DateOfBirth.Value.ToDateTime(TimeOnly.MinValue)
+            })
+        };
+    }
+
+    public static GetAllAccountsResponse ToAccountsResponse(this IEnumerable<Account> accounts)
+    {
+        return new GetAllAccountsResponse
+        {
+            Accounts = accounts.Select(account => new AccountResponse
+            {
+                Id = account.Id.Value,
+                AccountNumber = account.AccountNumber.Value,
+                Balance = account.Balance.Value,
+                PatientId = account.PatientId.Value,
             })
         };
     }

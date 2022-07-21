@@ -24,4 +24,15 @@ public static class DomainToDtoMapper
             DateOfBirth = patient.DateOfBirth.Value.ToDateTime(TimeOnly.MinValue)
         };
     }
+
+    public static AccountDto ToAccountDto(this Account account)
+    {
+        return new AccountDto
+        {
+            Id = account.Id.Value.ToString(),
+            AccountNumber = account.AccountNumber.Value,
+            Balance = account.Balance.Value,
+            PatientId = account.PatientId.Value.ToString(),
+        };
+    }
 }

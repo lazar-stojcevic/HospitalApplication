@@ -4,6 +4,7 @@ using Amazon.DynamoDBv2;
 using Amazon.DynamoDBv2.DocumentModel;
 using Amazon.DynamoDBv2.Model;
 using HospitalApi.Contracts.Data;
+using HospitalApi.Repositories.Interfaces;
 
 namespace HospitalApi.Repositories;
 

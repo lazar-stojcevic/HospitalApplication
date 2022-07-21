@@ -1,6 +1,7 @@
 ﻿using HospitalApi.Contracts.Data;
 using HospitalApi.Domain;
-using HospitalApi.Domain.Common;
+using HospitalApi.Domain.Common.Financial;
+using HospitalApi.Domain.Common.Patient;
 
 namespace HospitalApi.Mapping;
 
@@ -10,7 +11,7 @@ public static class DtoToDomainMapper
     {
         return new Patient
         {
-            Id = PatientId.From(Guid.Parse(patientDto.Id)),
+            Id = Domain.Common.Patient.PatientId.From(Guid.Parse(patientDto.Id)),
             Email = EmailAddress.From(patientDto.Email),
             Username = Username.From(patientDto.Username),
             FirstName = FirstName.From(patientDto.FirstName),
@@ -24,5 +25,16 @@ public static class DtoToDomainMapper
             Weight = Weight.From(patientDto.Weight),
             DateOfBirth = DateOfBirth.From(DateOnly.FromDateTime(patientDto.DateOfBirth))
         };
+    }
+
+    public static Account ToAccount(this AccountDto accountDto)
+    {
+        return new Account
+        {
+            Id = AccountId.From(Guid.Parse(accountDto.Id)),
+            AccountNumber = AccountNumber.From(accountDto.AccountNumber),
+            Balance = Balance.From(accountDto.Balance),
+            PatientId = Domain.Common.Financial.PatientId.From(Guid.Parse(accountDto.PatientId)),
+        }
     }
 }

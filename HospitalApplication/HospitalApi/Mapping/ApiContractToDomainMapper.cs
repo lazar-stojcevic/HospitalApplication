@@ -1,6 +1,8 @@
-﻿using HospitalApi.Contracts.Requests;
+﻿using HospitalApi.Contracts.Requests.Financial;
+using HospitalApi.Contracts.Requests.Patient;
 using HospitalApi.Domain;
-using HospitalApi.Domain.Common;
+using HospitalApi.Domain.Common.Financial;
+using HospitalApi.Domain.Common.Patient;
 
 namespace HospitalApi.Mapping;
 
@@ -10,7 +12,7 @@ public static class ApiContractToDomainMapper
     {
         return new Patient
         {
-            Id = PatientId.From(Guid.NewGuid()),
+            Id = Domain.Common.Patient.PatientId.From(Guid.NewGuid()),
             Email = EmailAddress.From(request.Email),
             Username = Username.From(request.Username),
             FirstName = FirstName.From(request.FirstName),
@@ -30,7 +32,7 @@ public static class ApiContractToDomainMapper
     {
         return new Patient
         {
-            Id = PatientId.From(request.Id),
+            Id = Domain.Common.Patient.PatientId.From(request.Id),
             Email = EmailAddress.From(request.Email),
             Username = Username.From(request.Username),
             FirstName = FirstName.From(request.FirstName),
@@ -43,6 +45,14 @@ public static class ApiContractToDomainMapper
             PersonalNumber = PersonalNumber.From(request.PersonalNumber),
             PhoneNumber = PhoneNumber.From(request.PhoneNumber),
             DateOfBirth = DateOfBirth.From(DateOnly.FromDateTime(request.DateOfBirth))
+        };
+    }
+
+    public static Account ToAccount(this ChangeAccountBalanceRequest request)
+    {
+        return new Account
+        {
+            Id = AccountId.From(request.Id),
         };
     }
 }

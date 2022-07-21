@@ -2,7 +2,8 @@
 using FluentValidation.Results;
 using HospitalApi.Domain;
 using HospitalApi.Mapping;
-using HospitalApi.Repositories;
+using HospitalApi.Repositories.Interfaces;
+using HospitalApi.Services.Interfaces;
 
 namespace HospitalApi.Services;
 

@@ -4,7 +4,9 @@ using FastEndpoints;
 using FastEndpoints.Swagger;
 using HospitalApi.Contracts.Responses;
 using HospitalApi.Repositories;
+using HospitalApi.Repositories.Interfaces;
 using HospitalApi.Services;
+using HospitalApi.Services.Interfaces;
 using HospitalApi.Validation;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -16,10 +18,14 @@ builder.Services.AddFastEndpoints();
 builder.Services.AddSwaggerDoc();
 
 builder.Services.AddSingleton<IAmazonDynamoDB>(_ => new AmazonDynamoDBClient(RegionEndpoint.EUCentral1));
+
 builder.Services.AddSingleton<IPatientRepository>(provider =>
-    new PatientRepository(provider.GetRequiredService<IAmazonDynamoDB>(),
-        config.GetValue<string>("Database:TableName")));
+    new PatientRepository(provider.GetRequiredService<IAmazonDynamoDB>(), config.GetValue<string>("Database:TableName")));
+builder.Services.AddSingleton<IAccountRepository>(provider =>
+    new AccountRepository(provider.GetRequiredService<IAmazonDynamoDB>(), config.GetValue<string>("Database:AccountTable")));
+
 builder.Services.AddSingleton<IPatientService, PatientService>();
+builder.Services.AddSingleton<IAccountService, AccountService>();
 
 var app = builder.Build();
 
