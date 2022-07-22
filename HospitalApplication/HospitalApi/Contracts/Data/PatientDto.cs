@@ -23,6 +23,7 @@ public class PatientDto
     public string BloodType { get; init; } = default!;
     public string PhoneNumber { get; init; } = default!;
     public string Email { get; init; } = default!;
-
     public DateTime DateOfBirth { get; init; }
+
+    public string AccountId { get; set; } = default!;
 }

@@ -21,8 +21,8 @@ public class AccountRepository : IAccountRepository
 
     public async Task<bool> CreateAsync(AccountDto account)
     {
-        var patientAsJson = JsonSerializer.Serialize(account);
-        var itemAsDocument = Document.FromJson(patientAsJson);
+        var accountAsJson = JsonSerializer.Serialize(account);
+        var itemAsDocument = Document.FromJson(accountAsJson);
         var itemAsAttributes = itemAsDocument.ToAttributeMap();
         var createItemRequest = new PutItemRequest
         {

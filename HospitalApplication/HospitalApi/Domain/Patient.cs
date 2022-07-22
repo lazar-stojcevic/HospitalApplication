@@ -1,4 +1,5 @@
-﻿using HospitalApi.Domain.Common.Patient;
+﻿using HospitalApi.Domain.Common.Financial;
+using HospitalApi.Domain.Common.Patient;
 
 namespace HospitalApi.Domain;
 
@@ -17,4 +18,7 @@ public class Patient
     public PhoneNumber PhoneNumber { get; init; } = default!;
     public EmailAddress Email { get; init; } = default!;
     public DateOfBirth DateOfBirth { get; init; } = default!;
+    public AccountId AccountId { get; set; } = default!;
+
+    public AccountId SetAccountId(Guid id) => AccountId = AccountId.From(id); 
 }

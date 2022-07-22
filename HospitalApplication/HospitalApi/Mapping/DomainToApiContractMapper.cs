@@ -22,7 +22,8 @@ public static class DomainToApiContractMapper
             Gender = patient.Gender.Value,
             PersonalNumber = patient.PersonalNumber.Value,
             PhoneNumber = patient.PhoneNumber.Value,
-            DateOfBirth = patient.DateOfBirth.Value.ToDateTime(TimeOnly.MinValue)
+            DateOfBirth = patient.DateOfBirth.Value.ToDateTime(TimeOnly.MinValue),
+            AccountId = patient.AccountId?.Value ?? null,
         };
     }
 
@@ -55,7 +56,8 @@ public static class DomainToApiContractMapper
                 Gender = x.Gender.Value,
                 PersonalNumber = x.PersonalNumber.Value,
                 PhoneNumber = x.PhoneNumber.Value,
-                DateOfBirth = x.DateOfBirth.Value.ToDateTime(TimeOnly.MinValue)
+                DateOfBirth = x.DateOfBirth.Value.ToDateTime(TimeOnly.MinValue),
+                AccountId = x.AccountId.Value
             })
         };
     }

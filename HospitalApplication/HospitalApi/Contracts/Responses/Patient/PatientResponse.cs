@@ -16,4 +16,5 @@ public class PatientResponse
     public string PhoneNumber { get; init; } = default!;
     public string Email { get; init; } = default!;
     public DateTime DateOfBirth { get; init; }
+    public Guid? AccountId { get; init; } = default!;
 }

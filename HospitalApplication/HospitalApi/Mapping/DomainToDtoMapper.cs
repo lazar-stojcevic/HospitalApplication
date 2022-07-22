@@ -21,7 +21,8 @@ public static class DomainToDtoMapper
             Gender = patient.Gender.Value,
             PersonalNumber = patient.PersonalNumber.Value,
             PhoneNumber = patient.PhoneNumber.Value,
-            DateOfBirth = patient.DateOfBirth.Value.ToDateTime(TimeOnly.MinValue)
+            DateOfBirth = patient.DateOfBirth.Value.ToDateTime(TimeOnly.MinValue),
+            AccountId = patient.AccountId?.ToString() ?? "",
         };
     }
 

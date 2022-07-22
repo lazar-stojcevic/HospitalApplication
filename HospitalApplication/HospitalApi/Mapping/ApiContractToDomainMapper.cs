@@ -12,7 +12,7 @@ public static class ApiContractToDomainMapper
     {
         return new Patient
         {
-            Id = Domain.Common.Patient.PatientId.From(Guid.NewGuid()),
+            Id = PatientId.From(Guid.NewGuid()),
             Email = EmailAddress.From(request.Email),
             Username = Username.From(request.Username),
             FirstName = FirstName.From(request.FirstName),
@@ -32,7 +32,7 @@ public static class ApiContractToDomainMapper
     {
         return new Patient
         {
-            Id = Domain.Common.Patient.PatientId.From(request.Id),
+            Id = PatientId.From(request.Id),
             Email = EmailAddress.From(request.Email),
             Username = Username.From(request.Username),
             FirstName = FirstName.From(request.FirstName),

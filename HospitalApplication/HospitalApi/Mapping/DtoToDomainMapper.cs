@@ -11,7 +11,7 @@ public static class DtoToDomainMapper
     {
         return new Patient
         {
-            Id = Domain.Common.Patient.PatientId.From(Guid.Parse(patientDto.Id)),
+            Id = PatientId.From(Guid.Parse(patientDto.Id)),
             Email = EmailAddress.From(patientDto.Email),
             Username = Username.From(patientDto.Username),
             FirstName = FirstName.From(patientDto.FirstName),
@@ -23,7 +23,8 @@ public static class DtoToDomainMapper
             BloodType = BloodType.From(patientDto.BloodType),
             Height = Height.From(patientDto.Height),
             Weight = Weight.From(patientDto.Weight),
-            DateOfBirth = DateOfBirth.From(DateOnly.FromDateTime(patientDto.DateOfBirth))
+            DateOfBirth = DateOfBirth.From(DateOnly.FromDateTime(patientDto.DateOfBirth)),
+            AccountId = AccountId.From(Guid.Parse(patientDto.AccountId))
         };
     }
 
@@ -34,7 +35,7 @@ public static class DtoToDomainMapper
             Id = AccountId.From(Guid.Parse(accountDto.Id)),
             AccountNumber = AccountNumber.From(accountDto.AccountNumber),
             Balance = Balance.From(accountDto.Balance),
-            PatientId = Domain.Common.Financial.PatientId.From(Guid.Parse(accountDto.PatientId)),
-        }
+            PatientId = PatientId.From(Guid.Parse(accountDto.PatientId)),
+        };
     }
 }
