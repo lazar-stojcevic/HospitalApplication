@@ -1,8 +1,11 @@
-﻿using HospitalApi.Contracts.Requests.Financial;
+﻿using HospitalApi.Contracts.Requests.Doctor;
+using HospitalApi.Contracts.Requests.Financial;
 using HospitalApi.Contracts.Requests.Patient;
 using HospitalApi.Domain;
+using HospitalApi.Domain.Common.Doctor;
 using HospitalApi.Domain.Common.Financial;
 using HospitalApi.Domain.Common.Patient;
+using HospitalApi.Domain.Common.Shared;
 
 namespace HospitalApi.Mapping;
 
@@ -53,6 +56,37 @@ public static class ApiContractToDomainMapper
         return new Account
         {
             Id = AccountId.From(request.Id),
+        };
+    }
+
+    public static Doctor ToDoctor(this CreateDoctorRequest request)
+    {
+        return new Doctor
+        {
+            Id = DoctorId.From(Guid.NewGuid()),
+            Email = EmailAddress.From(request.Email),
+            Username = Username.From(request.Username),
+            FirstName = FirstName.From(request.FirstName),
+            Surname = Surname.From(request.Surname),
+            PersonalNumber = PersonalNumber.From(request.PersonalNumber),
+            PhoneNumber = PhoneNumber.From(request.PhoneNumber),
+            DateOfBirth = DateOfBirth.From(DateOnly.FromDateTime(request.DateOfBirth)),
+            MedicalSpeciality = MedicalSpeciality.From(request.MedicalSpeciality),
+        };
+    }
+
+    public static Doctor ToDoctor(this UpdateDoctorRequest request)
+    {
+        return new Doctor
+        {
+            Email = EmailAddress.From(request.Email),
+            Username = Username.From(request.Username),
+            FirstName = FirstName.From(request.FirstName),
+            Surname = Surname.From(request.Surname),
+            PersonalNumber = PersonalNumber.From(request.PersonalNumber),
+            PhoneNumber = PhoneNumber.From(request.PhoneNumber),
+            DateOfBirth = DateOfBirth.From(DateOnly.FromDateTime(request.DateOfBirth)),
+            MedicalSpeciality = MedicalSpeciality.From(request.MedicalSpeciality),
         };
     }
 }

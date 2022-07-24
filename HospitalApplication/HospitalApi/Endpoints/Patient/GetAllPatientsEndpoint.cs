@@ -18,6 +18,10 @@ namespace HospitalApi.Endpoints.Patient
 
         public override async Task HandleAsync(EmptyRequest req, CancellationToken ct)
         {
+            /*
+            HttpContext.Request.Headers.TryGetValue("Connection", out var output);
+            Console.WriteLine(output);
+            */
             var patients = await _patientService.GetAllAsync();
 
             if (patients is null)

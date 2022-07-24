@@ -3,23 +3,24 @@ using FluentValidation;
 using FluentValidation.Results;
 using ValueOf;
 
-namespace HospitalApi.Domain.Common.Patient
+namespace HospitalApi.Domain.Common.Shared
 {
-    public class FirstName : ValueOf<string, FirstName>
+    public class Surname : ValueOf<string, Surname>
     {
-        private static readonly Regex FirstNameRegex =
+        private static readonly Regex SurnameRegex =
             new("^[a-z ,.'-]+$", RegexOptions.Compiled | RegexOptions.IgnoreCase);
 
         protected override void Validate()
         {
-            if (!FirstNameRegex.IsMatch(Value))
+            if (!SurnameRegex.IsMatch(Value))
             {
-                var message = $"{Value} is not a valid first name";
+                var message = $"{Value} is not a valid surname";
                 throw new ValidationException(message, new[]
                 {
-                new ValidationFailure(nameof(FirstName), message)
+                new ValidationFailure(nameof(Surname), message)
             });
             }
         }
     }
+
 }

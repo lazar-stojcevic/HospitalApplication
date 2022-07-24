@@ -1,5 +1,6 @@
 ﻿using HospitalApi.Domain.Common.Financial;
 using HospitalApi.Domain.Common.Patient;
+using HospitalApi.Domain.Common.Shared;
 
 namespace HospitalApi.Domain;
 

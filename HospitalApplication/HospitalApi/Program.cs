@@ -23,9 +23,12 @@ builder.Services.AddSingleton<IPatientRepository>(provider =>
     new PatientRepository(provider.GetRequiredService<IAmazonDynamoDB>(), config.GetValue<string>("Database:TableName")));
 builder.Services.AddSingleton<IAccountRepository>(provider =>
     new AccountRepository(provider.GetRequiredService<IAmazonDynamoDB>(), config.GetValue<string>("Database:AccountTable")));
+builder.Services.AddSingleton<IDoctorRepository>(provider =>
+    new DoctorRepository(provider.GetRequiredService<IAmazonDynamoDB>(), config.GetValue<string>("Database:DoctorsTable")));
 
 builder.Services.AddSingleton<IPatientService, PatientService>();
 builder.Services.AddSingleton<IAccountService, AccountService>();
+builder.Services.AddSingleton<IDoctorService, DoctorService>();
 
 var app = builder.Build();
 

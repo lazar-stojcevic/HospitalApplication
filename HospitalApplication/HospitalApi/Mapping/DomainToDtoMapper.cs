@@ -36,4 +36,20 @@ public static class DomainToDtoMapper
             PatientId = account.PatientId.Value.ToString(),
         };
     }
+
+    public static DoctorDto ToDoctorDto(this Doctor doctor)
+    {
+        return new DoctorDto
+        {
+            Id = doctor.Id.Value.ToString(),
+            Email = doctor.Email.Value,
+            Username = doctor.Username.Value,
+            FirstName = doctor.FirstName.Value,
+            Surname = doctor.Surname.Value,
+            PersonalNumber = doctor.PersonalNumber.Value,
+            PhoneNumber = doctor.PhoneNumber.Value,
+            DateOfBirth = doctor.DateOfBirth.Value.ToDateTime(TimeOnly.MinValue),
+            MedicalSpeciality = doctor.MedicalSpeciality.Value,
+        };
+    }
 }

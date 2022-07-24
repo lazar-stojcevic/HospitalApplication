@@ -1,4 +1,5 @@
-﻿using HospitalApi.Contracts.Responses.Financial;
+﻿using HospitalApi.Contracts.Responses.Doctor;
+using HospitalApi.Contracts.Responses.Financial;
 using HospitalApi.Contracts.Responses.Patient;
 using HospitalApi.Domain;
 
@@ -72,6 +73,41 @@ public static class DomainToApiContractMapper
                 AccountNumber = account.AccountNumber.Value,
                 Balance = account.Balance.Value,
                 PatientId = account.PatientId.Value,
+            })
+        };
+    }
+
+    public static DoctorResponse ToDoctorResponse(this Doctor doctor)
+    {
+        return new DoctorResponse
+        {
+            Id = doctor.Id.Value,
+            Email = doctor.Email.Value,
+            Username = doctor.Username.Value,
+            FirstName = doctor.FirstName.Value,
+            Surname = doctor.Surname.Value,
+            PersonalNumber = doctor.PersonalNumber.Value,
+            PhoneNumber = doctor.PhoneNumber.Value,
+            DateOfBirth = doctor.DateOfBirth.Value.ToDateTime(TimeOnly.MinValue),
+            MedicalSpeciality = doctor.MedicalSpeciality.Value,
+        };
+    }
+
+    public static GetAllDoctorsResponse ToDoctorsResponse(this IEnumerable<Doctor> doctors)
+    {
+        return new GetAllDoctorsResponse
+        {
+            Doctors = doctors.Select(doctor => new DoctorResponse
+            {
+                Id = doctor.Id.Value,
+                Email = doctor.Email.Value,
+                Username = doctor.Username.Value,
+                FirstName = doctor.FirstName.Value,
+                Surname = doctor.Surname.Value,
+                PersonalNumber = doctor.PersonalNumber.Value,
+                PhoneNumber = doctor.PhoneNumber.Value,
+                DateOfBirth = doctor.DateOfBirth.Value.ToDateTime(TimeOnly.MinValue),
+                MedicalSpeciality = doctor.MedicalSpeciality.Value,
             })
         };
     }

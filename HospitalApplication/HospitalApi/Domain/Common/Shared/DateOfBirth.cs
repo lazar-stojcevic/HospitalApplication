@@ -2,7 +2,7 @@
 using FluentValidation.Results;
 using ValueOf;
 
-namespace HospitalApi.Domain.Common.Patient;
+namespace HospitalApi.Domain.Common.Shared;
 
 public class DateOfBirth : ValueOf<DateOnly, DateOfBirth>
 {
