@@ -1,7 +1,9 @@
-﻿using HospitalApi.Contracts.Requests.Doctor;
+﻿using HospitalApi.Contracts.Requests.Appointment;
+using HospitalApi.Contracts.Requests.Doctor;
 using HospitalApi.Contracts.Requests.Financial;
 using HospitalApi.Contracts.Requests.Patient;
 using HospitalApi.Domain;
+using HospitalApi.Domain.Common.Appointment;
 using HospitalApi.Domain.Common.Doctor;
 using HospitalApi.Domain.Common.Financial;
 using HospitalApi.Domain.Common.Patient;
@@ -87,6 +89,28 @@ public static class ApiContractToDomainMapper
             PhoneNumber = PhoneNumber.From(request.PhoneNumber),
             DateOfBirth = DateOfBirth.From(DateOnly.FromDateTime(request.DateOfBirth)),
             MedicalSpeciality = MedicalSpeciality.From(request.MedicalSpeciality),
+        };
+    }
+
+    public static Appointment ToAppointment(this CreateAppointmentRequest request)
+    {
+        return new Appointment
+        {
+            Id = AppointmentId.From(Guid.NewGuid()),
+            DoctorId = DoctorId.From(Guid.NewGuid()),
+            PatientId = PatientId.From(Guid.NewGuid()),
+            Report = null,
+            EndTime = EndTime.From(request.EndTime),
+            StartTime = StartTime.From(request.StartTime),
+        };
+    }
+
+    public static Appointment ToAppointment(this FinishAppointmentRequest request)
+    {
+        return new Appointment
+        {
+            Id = AppointmentId.From(request.Id),
+            Report = Report.From(request.Report)
         };
     }
 }

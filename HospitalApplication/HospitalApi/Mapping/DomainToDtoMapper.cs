@@ -52,4 +52,17 @@ public static class DomainToDtoMapper
             MedicalSpeciality = doctor.MedicalSpeciality.Value,
         };
     }
+
+    public static AppointmentDto ToAppointmentDto(this Appointment appointmen)
+    {
+        return new AppointmentDto
+        {
+            Id = appointmen.Id.Value.ToString(),
+            DoctorId = appointmen.DoctorId.Value.ToString(),
+            PatientId = appointmen.PatientId.Value.ToString(),
+            StartTime = appointmen.StartTime.Value,
+            EndTime = appointmen.EndTime.Value,
+            Report = appointmen.Report?.Value ?? string.Empty,
+        };
+    }
 }

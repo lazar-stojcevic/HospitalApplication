@@ -1,4 +1,5 @@
-﻿using HospitalApi.Contracts.Responses.Doctor;
+﻿using HospitalApi.Contracts.Responses.Appointment;
+using HospitalApi.Contracts.Responses.Doctor;
 using HospitalApi.Contracts.Responses.Financial;
 using HospitalApi.Contracts.Responses.Patient;
 using HospitalApi.Domain;
@@ -108,6 +109,35 @@ public static class DomainToApiContractMapper
                 PhoneNumber = doctor.PhoneNumber.Value,
                 DateOfBirth = doctor.DateOfBirth.Value.ToDateTime(TimeOnly.MinValue),
                 MedicalSpeciality = doctor.MedicalSpeciality.Value,
+            })
+        };
+    }
+
+    public static AppointmentResponse ToAppointmentResponse(this Appointment appointment)
+    {
+        return new AppointmentResponse
+        {
+            Id = appointment.Id.Value,
+            DoctorId = appointment.DoctorId.Value,
+            PatientId = appointment.PatientId.Value,
+            EndTime = appointment.EndTime.Value,
+            StartTime = appointment.StartTime.Value,
+            Report = appointment.Report?.Value ?? "",
+        };
+    }
+
+    public static MultipleAppointmentsResponse ToMultipleAppointmentResponse(this IEnumerable<Appointment> appointments)
+    {
+        return new MultipleAppointmentsResponse
+        {
+            Appointments = appointments.Select(appointment => new AppointmentResponse
+            {
+                Id = appointment.Id.Value,
+                DoctorId = appointment.DoctorId.Value,
+                PatientId = appointment.PatientId.Value,
+                EndTime = appointment.EndTime.Value,
+                StartTime = appointment.StartTime.Value,
+                Report = appointment.Report?.Value ?? string.Empty,
             })
         };
     }

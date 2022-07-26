@@ -7,6 +7,6 @@ namespace HospitalApi.Repositories.Interfaces
         Task<bool> CreateAsync(AccountDto account);
         Task<AccountDto?> GetAsync(Guid id);
         Task<ICollection<AccountDto>?> GetAllAsync();
-        Task<bool> UpdateAsync(AccountDto patient);
+        Task<bool> UpdateAsync(AccountDto account);
     }
 }

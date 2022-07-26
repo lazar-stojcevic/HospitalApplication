@@ -1,5 +1,6 @@
 ﻿using HospitalApi.Contracts.Data;
 using HospitalApi.Domain;
+using HospitalApi.Domain.Common.Appointment;
 using HospitalApi.Domain.Common.Doctor;
 using HospitalApi.Domain.Common.Financial;
 using HospitalApi.Domain.Common.Patient;
@@ -54,6 +55,19 @@ public static class DtoToDomainMapper
             PersonalNumber = PersonalNumber.From(doctorDto.PersonalNumber),
             DateOfBirth = DateOfBirth.From(DateOnly.FromDateTime(doctorDto.DateOfBirth)),
             MedicalSpeciality = MedicalSpeciality.From(doctorDto.MedicalSpeciality),
+        };
+    }
+
+    public static Appointment ToAppointment(this AppointmentDto appointmentDto)
+    {
+        return new Appointment
+        {
+            Id = AppointmentId.From(Guid.Parse(appointmentDto.Id)),
+            DoctorId = DoctorId.From(Guid.Parse(appointmentDto.DoctorId)),
+            PatientId = PatientId.From(Guid.Parse(appointmentDto.PatientId)),
+            StartTime = StartTime.From(appointmentDto.StartTime),
+            EndTime = EndTime.From(appointmentDto.EndTime),
+            Report = Report.From(appointmentDto.Report),
         };
     }
 }
