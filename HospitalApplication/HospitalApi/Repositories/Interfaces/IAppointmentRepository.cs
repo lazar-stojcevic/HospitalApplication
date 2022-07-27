@@ -8,5 +8,7 @@ public interface IAppointmentRepository
     Task<AppointmentDto?> GetAsync(Guid id);
     Task<ICollection<AppointmentDto>?> GetAllAsync();
     Task<bool> UpdateAsync(AppointmentDto patient);
+    Task<ICollection<AppointmentDto>?> GetAppointmentsForPatient(Guid patientId);
+    Task<ICollection<AppointmentDto>?> GetAppointmentsForDoctor(Guid doctorId);
 }
 

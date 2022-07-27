@@ -1,4 +1,5 @@
 ﻿using Amazon.DynamoDBv2;
+using Amazon.DynamoDBv2.DataModel;
 using Amazon.DynamoDBv2.DocumentModel;
 using Amazon.DynamoDBv2.Model;
 using HospitalApi.Contracts.Data;
@@ -97,6 +98,68 @@ public class AppointmentRepository : IAppointmentRepository
 
         var response = await _dynamoDb.PutItemAsync(updateItemRequest);
         return response.HttpStatusCode == HttpStatusCode.OK;
+    }
+
+    public async Task<ICollection<AppointmentDto>?> GetAppointmentsForPatient(Guid patientId)
+    {
+        ScanRequest scanFilter = new()
+        {
+            TableName = _tableName,
+            ConsistentRead = true,
+            ExpressionAttributeValues = new Dictionary<string, AttributeValue> {
+                {":patient", new AttributeValue { S = patientId.ToString() }}
+            },
+            FilterExpression = "PatientId = :patient",
+        };
+        var response = await _dynamoDb.ScanAsync(scanFilter);
+        if (response.Count == 0)
+        {
+            return null;
+        }
+
+        var retVal = new List<AppointmentDto>();
+
+        foreach (var item in response.Items)
+        {
+            var docItem = Document.FromAttributeMap(item);
+            var itemJson = JsonSerializer.Deserialize<AppointmentDto>(docItem.ToJson());
+            if (itemJson != null)
+            {
+                retVal.Add(itemJson);
+            }
+        }
+        return retVal!;
+    }
+
+    public async Task<ICollection<AppointmentDto>?> GetAppointmentsForDoctor(Guid doctorId)
+    {
+        ScanRequest scanFilter = new()
+        {
+            TableName = _tableName,
+            ConsistentRead = true,
+            ExpressionAttributeValues = new Dictionary<string, AttributeValue> {
+                {":doctor", new AttributeValue { S = doctorId.ToString() }}
+            },
+            FilterExpression = "DoctorId = :doctor",
+        };
+        var response = await _dynamoDb.ScanAsync(scanFilter);
+        if (response.Count == 0)
+        {
+            return null;
+        }
+
+        var retVal = new List<AppointmentDto>();
+
+        foreach (var item in response.Items)
+        {
+            var docItem = Document.FromAttributeMap(item);
+            var itemJson = JsonSerializer.Deserialize<AppointmentDto>(docItem.ToJson());
+            if (itemJson != null)
+            {
+                retVal.Add(itemJson);
+            }
+        }
+        return retVal!;
     }
 }
 
