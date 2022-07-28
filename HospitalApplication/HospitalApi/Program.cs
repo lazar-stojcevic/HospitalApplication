@@ -25,10 +25,13 @@ builder.Services.AddSingleton<IAccountRepository>(provider =>
     new AccountRepository(provider.GetRequiredService<IAmazonDynamoDB>(), config.GetValue<string>("Database:AccountTable")));
 builder.Services.AddSingleton<IDoctorRepository>(provider =>
     new DoctorRepository(provider.GetRequiredService<IAmazonDynamoDB>(), config.GetValue<string>("Database:DoctorsTable")));
+builder.Services.AddSingleton<IAppointmentRepository>(provider =>
+    new AppointmentRepository(provider.GetRequiredService<IAmazonDynamoDB>(), config.GetValue<string>("Database:AppointmentsTable")));
 
 builder.Services.AddSingleton<IPatientService, PatientService>();
 builder.Services.AddSingleton<IAccountService, AccountService>();
 builder.Services.AddSingleton<IDoctorService, DoctorService>();
+builder.Services.AddSingleton<IAppointmentService, AppointmentService>();
 
 var app = builder.Build();
 

@@ -6,9 +6,11 @@ public interface IAppointmentService
 {
     Task<bool> CreateAsync(Appointment appointment);
 
-    Task<Doctor?> GetAsync(Guid id);
+    Task<Appointment?> GetAsync(Guid id);
 
-    Task<ICollection<Doctor>?> GetAllAsync();
+    Task<ICollection<Appointment>?> GetAllAsync();
+
+    Task<ICollection<Appointment>?> GetPatientsAppointmentsAsync(Guid patientId);
 
     Task<bool> UpdateAsync(Appointment appointment);
 }

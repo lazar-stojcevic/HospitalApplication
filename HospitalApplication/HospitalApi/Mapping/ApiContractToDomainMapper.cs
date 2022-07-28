@@ -97,8 +97,8 @@ public static class ApiContractToDomainMapper
         return new Appointment
         {
             Id = AppointmentId.From(Guid.NewGuid()),
-            DoctorId = DoctorId.From(Guid.NewGuid()),
-            PatientId = PatientId.From(Guid.NewGuid()),
+            DoctorId = DoctorId.From(Guid.Parse(request.DoctorId)),
+            PatientId = PatientId.From(Guid.Parse(request.PatientId)),
             Report = null,
             EndTime = EndTime.From(request.EndTime),
             StartTime = StartTime.From(request.StartTime),

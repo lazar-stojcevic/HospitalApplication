@@ -38,7 +38,7 @@ public class AppointmentService : IAppointmentService
             var message = $"A doctor with id {appointment.DoctorId.Value} don't exists";
             throw new ValidationException(message, new[]
             {
-                new ValidationFailure(nameof(Patient), message)
+                new ValidationFailure(nameof(Doctor), message)
             });
         }
 
@@ -65,6 +65,21 @@ public class AppointmentService : IAppointmentService
     {
         var appointmentDto = await _appointmentRepository.GetAsync(id);
         return appointmentDto?.ToAppointment();
+    }
+
+    public async Task<ICollection<Appointment>?> GetPatientsAppointmentsAsync(Guid patientId)
+    {
+        var list = await _appointmentRepository.GetAppointmentsForPatient(patientId);
+        var retVal = new List<Appointment>();
+        if (list != null)
+        {
+            foreach (var item in list)
+            {
+                retVal.Add(item.ToAppointment());
+            }
+            return retVal;
+        }
+        return new List<Appointment>();
     }
 
     public async Task<bool> UpdateAsync(Appointment appointment)

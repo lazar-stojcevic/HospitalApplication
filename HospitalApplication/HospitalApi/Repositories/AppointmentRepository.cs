@@ -109,7 +109,7 @@ public class AppointmentRepository : IAppointmentRepository
             ExpressionAttributeValues = new Dictionary<string, AttributeValue> {
                 {":patient", new AttributeValue { S = patientId.ToString() }}
             },
-            FilterExpression = "PatientId = :patient",
+            FilterExpression =  "PatientId = :patient",
         };
         var response = await _dynamoDb.ScanAsync(scanFilter);
         if (response.Count == 0)
