@@ -28,6 +28,7 @@ public class UpdatePatientEndpoint : Endpoint<UpdatePatientRequest, PatientRespo
         }
 
         var patient = req.ToPatient();
+        patient.SetPassword(existingPatient.Password);
         await _patientService.UpdateAsync(patient);
 
         var patinetResponse = patient.ToPatientResponse();

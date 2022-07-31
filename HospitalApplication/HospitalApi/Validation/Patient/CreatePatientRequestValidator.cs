@@ -19,5 +19,6 @@ public class CreatePatientRequestValidator : AbstractValidator<CreatePatientRequ
         RuleFor(x => x.Username).NotEmpty();
         RuleFor(x => x.DateOfBirth).NotEmpty();
         RuleFor(x => x.Gender).NotEmpty();
+        RuleFor(x => x.Password).NotEmpty();
     }
 }

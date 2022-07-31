@@ -11,15 +11,18 @@ namespace HospitalApi.Endpoints.Doctor;
 public class CreateDoctorEndpoint : Endpoint<CreateDoctorRequest, DoctorResponse>
 {
     private readonly IDoctorService _doctorService;
+    private readonly IAuthenticationService _authenticationService;
 
-    public CreateDoctorEndpoint(IDoctorService doctorService)
+    public CreateDoctorEndpoint(IDoctorService doctorService, IAuthenticationService authenticationService)
     {
         _doctorService = doctorService;
+        _authenticationService = authenticationService;
     }
 
     public override async Task HandleAsync(CreateDoctorRequest req, CancellationToken ct)
     {
         var doctor = req.ToDoctor();
+        doctor.SetPassword(_authenticationService.HashPassword(req.Password));
 
         await _doctorService.CreateAsync(doctor);
 

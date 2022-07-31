@@ -12,16 +12,19 @@ public class CreatePatientEndpoint : Endpoint<CreatePatientRequest, PatientRespo
 {
     private readonly IPatientService _patientService;
     private readonly IAccountService _accountService;
+    private readonly IAuthenticationService _authenticationService;
 
-    public CreatePatientEndpoint(IPatientService patientService, IAccountService accountService)
+    public CreatePatientEndpoint(IPatientService patientService, IAccountService accountService, IAuthenticationService authenticationService)
     {
         _patientService = patientService;
         _accountService = accountService;
+        _authenticationService = authenticationService;
     }
 
     public override async Task HandleAsync(CreatePatientRequest req, CancellationToken ct)
     {
         var patient = req.ToPatient();
+        patient.SetPassword(_authenticationService.HashPassword(req.Password));
 
         await _patientService.CreateAsync(patient);
 

@@ -59,7 +59,7 @@ public static class DomainToApiContractMapper
                 PersonalNumber = x.PersonalNumber.Value,
                 PhoneNumber = x.PhoneNumber.Value,
                 DateOfBirth = x.DateOfBirth.Value.ToDateTime(TimeOnly.MinValue),
-                AccountId = x.AccountId.Value
+                AccountId = x.AccountId.Value,
             })
         };
     }

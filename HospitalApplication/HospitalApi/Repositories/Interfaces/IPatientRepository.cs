@@ -8,6 +8,8 @@ public interface IPatientRepository
 
     Task<PatientDto?> GetAsync(Guid id);
 
+    Task<PatientDto?> GetByUsername(string username);
+
     Task<ICollection<PatientDto>?> GetAllAsync();
 
     Task<bool> UpdateAsync(PatientDto patient);

@@ -113,4 +113,27 @@ public class PatientRepository : IPatientRepository
         }
         return retVal!;
     }
+
+    public async Task<PatientDto?> GetByUsername(string username)
+    {
+        ScanRequest scanFilter = new()
+        {
+            TableName = _tableName,
+            ConsistentRead = true,
+            ExpressionAttributeValues = new Dictionary<string, AttributeValue> {
+                {":username", new AttributeValue { S = username }}
+            },
+            FilterExpression = "Username = :username",
+        };
+        var response = await _dynamoDb.ScanAsync(scanFilter);
+        if (response.Count == 0)
+        {
+            return null;
+        }
+
+        var docItem = Document.FromAttributeMap(response.Items.FirstOrDefault());
+        var itemJson = JsonSerializer.Deserialize<PatientDto>(docItem.ToJson());
+
+        return itemJson;
+    }
 }

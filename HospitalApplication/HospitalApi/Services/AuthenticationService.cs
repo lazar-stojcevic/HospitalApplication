@@ -23,11 +23,23 @@ public class AuthenticationService : IAuthenticationService
     {
         var doctor = await _doctorRepository.GetByUsername(login.Username);
 
-        if (doctor != null)
+        if (doctor != null && BCrypt.Net.BCrypt.Verify(login.Password, doctor.Password))
         {
             return GenerateJwtForDoctor(doctor);
         }
-        return "";
+
+        var patient = await _patientRepository.GetByUsername(login.Username);
+
+        if (patient != null && BCrypt.Net.BCrypt.Verify(login.Password, patient.Password))
+        {
+            return GenerateJwtForPatient(patient);
+        }
+        return string.Empty;
+    }
+
+    public string HashPassword(string password)
+    {
+        return BCrypt.Net.BCrypt.HashPassword(password);
     }
 
     private string GenerateJwtForDoctor(DoctorDto doctor)
@@ -35,6 +47,28 @@ public class AuthenticationService : IAuthenticationService
         List<Claim> claims = new List<Claim>
         {
             new Claim(ClaimTypes.Name, doctor.Username)
+        };
+
+        var key = new SymmetricSecurityKey(System.Text.Encoding.UTF8.GetBytes(_configuration.GetSection("Secret:Token").Value));
+
+        var cred = new SigningCredentials(key, SecurityAlgorithms.HmacSha512Signature);
+
+        var token = new JwtSecurityToken(
+            claims: claims,
+            expires: DateTime.UtcNow.AddMinutes(60),
+            signingCredentials: cred
+        );
+
+        var jwt = new JwtSecurityTokenHandler().WriteToken(token);
+
+        return jwt;
+    }
+
+    private string GenerateJwtForPatient(PatientDto patient)
+    {
+        List<Claim> claims = new List<Claim>
+        {
+            new Claim(ClaimTypes.Name, patient.Username),
         };
 
         var key = new SymmetricSecurityKey(System.Text.Encoding.UTF8.GetBytes(_configuration.GetSection("Secret:Token").Value));
