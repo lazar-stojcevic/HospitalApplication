@@ -94,23 +94,15 @@ public static class ApiContractToDomainMapper
 
     public static Appointment ToAppointment(this CreateAppointmentRequest request)
     {
-        return new Appointment
+        var appointment = new Appointment
         {
             Id = AppointmentId.From(Guid.NewGuid()),
             DoctorId = DoctorId.From(Guid.Parse(request.DoctorId)),
             PatientId = PatientId.From(Guid.Parse(request.PatientId)),
-            Report = null,
             EndTime = EndTime.From(request.EndTime),
             StartTime = StartTime.From(request.StartTime),
         };
-    }
-
-    public static Appointment ToAppointment(this FinishAppointmentRequest request)
-    {
-        return new Appointment
-        {
-            Id = AppointmentId.From(request.Id),
-            Report = Report.From(request.Report)
-        };
+        appointment.InitAppointment();
+        return appointment;
     }
 }

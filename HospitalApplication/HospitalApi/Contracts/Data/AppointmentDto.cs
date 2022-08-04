@@ -14,6 +14,7 @@ public class AppointmentDto
     public string PatientId { get; init; } = null!;
     public string DoctorId { get; init; } = null!;
     public string Report { get; init; } = default!;
+    public double Price { get; init; } = default!;
     public DateTime StartTime { get; init; } = default!;
     public DateTime EndTime { get; init; } = default!;
 }

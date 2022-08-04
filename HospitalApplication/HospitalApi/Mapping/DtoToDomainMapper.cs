@@ -60,14 +60,17 @@ public static class DtoToDomainMapper
 
     public static Appointment ToAppointment(this AppointmentDto appointmentDto)
     {
-        return new Appointment
+        var appointment = new Appointment
         {
             Id = AppointmentId.From(Guid.Parse(appointmentDto.Id)),
             DoctorId = DoctorId.From(Guid.Parse(appointmentDto.DoctorId)),
             PatientId = PatientId.From(Guid.Parse(appointmentDto.PatientId)),
             StartTime = StartTime.From(appointmentDto.StartTime),
             EndTime = EndTime.From(appointmentDto.EndTime),
-            Report = Report.From(appointmentDto.Report),
         };
+
+        appointment.SetReportAndPrice(appointmentDto.Report, appointmentDto.Price);
+
+        return appointment;
     }
 }

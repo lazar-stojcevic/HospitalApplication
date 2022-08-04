@@ -65,6 +65,7 @@ public static class DomainToDtoMapper
             StartTime = appointmen.StartTime.Value,
             EndTime = appointmen.EndTime.Value,
             Report = appointmen.Report?.Value ?? string.Empty,
+            Price = appointmen.Price?.Value ?? 0,
         };
     }
 }
