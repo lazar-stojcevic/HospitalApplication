@@ -33,6 +33,7 @@ builder.Services.AddSingleton<IAccountService, AccountService>();
 builder.Services.AddSingleton<IDoctorService, DoctorService>();
 builder.Services.AddSingleton<IAppointmentService, AppointmentService>();
 builder.Services.AddSingleton<IAuthenticationService, AuthenticationService>();
+builder.Services.AddSingleton<IAnonymizationService, AnonymizationService>();
 
 var app = builder.Build();
 
