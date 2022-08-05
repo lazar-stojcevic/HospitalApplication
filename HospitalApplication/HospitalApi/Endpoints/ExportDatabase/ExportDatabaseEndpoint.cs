@@ -1,6 +1,10 @@
 ﻿using FastEndpoints;
-using HospitalApi.Contracts.Data;
+using HospitalApi.Contracts.Responses.Appointment;
+using HospitalApi.Contracts.Responses.Doctor;
 using HospitalApi.Contracts.Responses.ExportDatabase;
+using HospitalApi.Contracts.Responses.Financial;
+using HospitalApi.Contracts.Responses.Patient;
+using HospitalApi.Mapping;
 using HospitalApi.Services.Interfaces;
 using Microsoft.AspNetCore.Authorization;
 
@@ -39,11 +43,12 @@ public class ExportDatabaseEndpoint : Endpoint<EmptyRequest, ExportDatabaseRespo
 
         await SendOkAsync(new ExportDatabaseResponse
         {
-            Patients = _anonymizationService.AnonymisePatientsByMasking(patients) ?? new List<PatientDto>(),
-            Doctors = _anonymizationService.AnonymiseDoctorsByMasking(doctors) ?? new List<DoctorDto>(),
-            Accounts = _anonymizationService.AnonymiseAccountsByMasking(accounts) ?? new List<AccountDto>(),
-            Appointments = _anonymizationService.AnonymiseAppointmentsByMasking(appointments) ?? new List<AppointmentDto>(),
-        }, ct) ;
+            Patients = _anonymizationService.AnonymisePatientsByMasking(patients)?.ToPatientsResponse() ?? new List<PatientResponse>(),
+            Doctors = _anonymizationService.AnonymiseDoctorsByMasking(doctors)?.ToDoctorsResponse() ?? new List<DoctorResponse>(),
+            Accounts = _anonymizationService.AnonymiseAccountsByMasking(accounts)?.ToAccountsResponse() ?? new List<AccountResponse>(),
+            Appointments = _anonymizationService.AnonymiseAppointmentsByMasking(appointments)?.ToMultipleAppointmentResponse() ?? new List<AppointmentResponse>(),
+        },
+        ct) ;
     }
 }
 
