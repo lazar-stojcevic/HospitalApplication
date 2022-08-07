@@ -90,5 +90,28 @@ public class AnonymizationService : IAnonymizationService
         }));
         return retVal;
     }
+
+    public ICollection<AccountantDto>? AnonymiseAccountantsByMasking(ICollection<Accountant>? accountants)
+    {
+        var retVal = new List<AccountantDto>();
+
+        Random gen = new Random();
+
+        var range = 45 * 365; //45 years  
+
+        retVal.AddRange(accountants.Select(doctor => new AccountantDto
+        {
+            Id = doctor.Id.Value.ToString(),
+            Email = "******@*****.com",
+            DateOfBirth = DateTime.Today.AddDays(-gen.Next(range)).AddYears(24),
+            FirstName = "*******",
+            Surname = "****************",
+            PersonalNumber = "*************",
+            PhoneNumber = "*****-*****",
+            Password = "/",
+            Username = "***********"
+        }));
+        return retVal;
+    }
 }
 

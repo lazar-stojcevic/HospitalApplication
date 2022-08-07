@@ -1,4 +1,5 @@
-﻿using HospitalApi.Contracts.Responses.Appointment;
+﻿using HospitalApi.Contracts.Responses.Accountant;
+using HospitalApi.Contracts.Responses.Appointment;
 using HospitalApi.Contracts.Responses.Doctor;
 using HospitalApi.Contracts.Responses.Financial;
 using HospitalApi.Contracts.Responses.Patient;
@@ -109,6 +110,39 @@ public static class DomainToApiContractMapper
                 PhoneNumber = doctor.PhoneNumber.Value,
                 DateOfBirth = doctor.DateOfBirth.Value.ToDateTime(TimeOnly.MinValue),
                 MedicalSpeciality = doctor.MedicalSpeciality.Value,
+            })
+        };
+    }
+
+    public static AccountantResponse ToAccountantResponse(this Accountant accountant)
+    {
+        return new AccountantResponse
+        {
+            Id = accountant.Id.Value,
+            Email = accountant.Email.Value,
+            Username = accountant.Username.Value,
+            FirstName = accountant.FirstName.Value,
+            Surname = accountant.Surname.Value,
+            PersonalNumber = accountant.PersonalNumber.Value,
+            PhoneNumber = accountant.PhoneNumber.Value,
+            DateOfBirth = accountant.DateOfBirth.Value.ToDateTime(TimeOnly.MinValue),
+        };
+    }
+
+    public static GetAllAccountantsResponse ToAccountantsResponse(this IEnumerable<Accountant> accountants)
+    {
+        return new GetAllAccountantsResponse
+        {
+            Accountants = accountants.Select(accountant => new AccountantResponse
+            {
+                Id = accountant.Id.Value,
+                Email = accountant.Email.Value,
+                Username = accountant.Username.Value,
+                FirstName = accountant.FirstName.Value,
+                Surname = accountant.Surname.Value,
+                PersonalNumber = accountant.PersonalNumber.Value,
+                PhoneNumber = accountant.PhoneNumber.Value,
+                DateOfBirth = accountant.DateOfBirth.Value.ToDateTime(TimeOnly.MinValue)
             })
         };
     }

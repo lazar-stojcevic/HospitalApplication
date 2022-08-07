@@ -9,5 +9,6 @@ public interface IAnonymizationService
     ICollection<PatientDto>? AnonymisePatientsByMasking(ICollection<Patient>? patients);
     ICollection<AccountDto>? AnonymiseAccountsByMasking(ICollection<Account>? accounts);
     ICollection<AppointmentDto>? AnonymiseAppointmentsByMasking(ICollection<Appointment>? appointments);
+    ICollection<AccountantDto>? AnonymiseAccountantsByMasking(ICollection<Accountant>? accountants);
 }
 

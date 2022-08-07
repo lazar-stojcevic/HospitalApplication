@@ -1,8 +1,10 @@
-﻿using HospitalApi.Contracts.Requests.Appointment;
+﻿using HospitalApi.Contracts.Requests.Accountant;
+using HospitalApi.Contracts.Requests.Appointment;
 using HospitalApi.Contracts.Requests.Doctor;
 using HospitalApi.Contracts.Requests.Financial;
 using HospitalApi.Contracts.Requests.Patient;
 using HospitalApi.Domain;
+using HospitalApi.Domain.Common.Accountant;
 using HospitalApi.Domain.Common.Appointment;
 using HospitalApi.Domain.Common.Doctor;
 using HospitalApi.Domain.Common.Financial;
@@ -81,6 +83,7 @@ public static class ApiContractToDomainMapper
     {
         return new Doctor
         {
+            Id = DoctorId.From(Guid.Parse(request.Id)),
             Email = EmailAddress.From(request.Email),
             Username = Username.From(request.Username),
             FirstName = FirstName.From(request.FirstName),
@@ -89,6 +92,36 @@ public static class ApiContractToDomainMapper
             PhoneNumber = PhoneNumber.From(request.PhoneNumber),
             DateOfBirth = DateOfBirth.From(DateOnly.FromDateTime(request.DateOfBirth)),
             MedicalSpeciality = MedicalSpeciality.From(request.MedicalSpeciality),
+        };
+    }
+
+    public static Accountant ToAccountant(this CreateAccountantRequest request)
+    {
+        return new Accountant
+        {
+            Id = AccountantId.From(Guid.NewGuid()),
+            Email = EmailAddress.From(request.Email),
+            Username = Username.From(request.Username),
+            FirstName = FirstName.From(request.FirstName),
+            Surname = Surname.From(request.Surname),
+            PersonalNumber = PersonalNumber.From(request.PersonalNumber),
+            PhoneNumber = PhoneNumber.From(request.PhoneNumber),
+            DateOfBirth = DateOfBirth.From(DateOnly.FromDateTime(request.DateOfBirth)),
+        };
+    }
+
+    public static Accountant ToAccountant(this UpdateAccountantRequest request)
+    {
+        return new Accountant
+        {
+            Id = AccountantId.From(Guid.Parse(request.Id)),
+            Email = EmailAddress.From(request.Email),
+            Username = Username.From(request.Username),
+            FirstName = FirstName.From(request.FirstName),
+            Surname = Surname.From(request.Surname),
+            PersonalNumber = PersonalNumber.From(request.PersonalNumber),
+            PhoneNumber = PhoneNumber.From(request.PhoneNumber),
+            DateOfBirth = DateOfBirth.From(DateOnly.FromDateTime(request.DateOfBirth)),
         };
     }
 

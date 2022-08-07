@@ -49,8 +49,8 @@ namespace HospitalApi.Services
 
         public async Task<Doctor?> GetAsync(Guid id)
         {
-            var patientDto = await _doctorRepository.GetAsync(id);
-            return patientDto?.ToDoctor();
+            var doctorDto = await _doctorRepository.GetAsync(id);
+            return doctorDto?.ToDoctor();
         }
 
         public async Task<bool> UpdateAsync(Doctor doctor)

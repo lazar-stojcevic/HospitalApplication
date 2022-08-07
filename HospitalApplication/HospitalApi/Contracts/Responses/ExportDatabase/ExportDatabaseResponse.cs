@@ -1,4 +1,5 @@
 ﻿using HospitalApi.Contracts.Data;
+using HospitalApi.Contracts.Responses.Accountant;
 using HospitalApi.Contracts.Responses.Appointment;
 using HospitalApi.Contracts.Responses.Doctor;
 using HospitalApi.Contracts.Responses.Financial;
@@ -12,5 +13,6 @@ public class ExportDatabaseResponse
     public IEnumerable<DoctorResponse> Doctors { get; init; } = Enumerable.Empty<DoctorResponse>();
     public IEnumerable<AppointmentResponse> Appointments { get; init; } = Enumerable.Empty<AppointmentResponse>();
     public IEnumerable<AccountResponse> Accounts { get; init; } = Enumerable.Empty<AccountResponse>();
+    public IEnumerable<AccountantResponse> Accountants { get; init; } = Enumerable.Empty<AccountantResponse>();
 }
 

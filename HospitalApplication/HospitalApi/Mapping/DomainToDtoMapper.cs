@@ -55,6 +55,22 @@ public static class DomainToDtoMapper
         };
     }
 
+    public static AccountantDto ToAccountantDto(this Accountant accountant)
+    {
+        return new AccountantDto
+        {
+            Id = accountant.Id.Value.ToString(),
+            Email = accountant.Email.Value,
+            Username = accountant.Username.Value,
+            FirstName = accountant.FirstName.Value,
+            Surname = accountant.Surname.Value,
+            PersonalNumber = accountant.PersonalNumber.Value,
+            PhoneNumber = accountant.PhoneNumber.Value,
+            DateOfBirth = accountant.DateOfBirth.Value.ToDateTime(TimeOnly.MinValue),
+            Password = accountant.Password
+        };
+    }
+
     public static AppointmentDto ToAppointmentDto(this Appointment appointmen)
     {
         return new AppointmentDto
