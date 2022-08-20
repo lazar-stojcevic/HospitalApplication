@@ -1,6 +1,7 @@
 ﻿using FastEndpoints;
 using HospitalApi.Contracts.Requests.Patient;
 using HospitalApi.Contracts.Responses.Patient;
+using HospitalApi.Domain.Types;
 using HospitalApi.Mapping;
 using HospitalApi.Services.Interfaces;
 using Microsoft.AspNetCore.Authorization;
@@ -23,6 +24,12 @@ public class CreatePatientEndpoint : Endpoint<CreatePatientRequest, PatientRespo
 
     public override async Task HandleAsync(CreatePatientRequest req, CancellationToken ct)
     {
+        if (!await _authenticationService.IsUsernameUnique(req.Username, UserType.Patient))
+        {
+            await SendErrorsAsync(cancellation: ct);
+            return;
+        }
+
         var patient = req.ToPatient();
         patient.SetPassword(_authenticationService.HashPassword(req.Password));
 

@@ -1,6 +1,7 @@
 ﻿using FastEndpoints;
 using HospitalApi.Contracts.Requests.Accountant;
 using HospitalApi.Contracts.Responses.Accountant;
+using HospitalApi.Domain.Types;
 using HospitalApi.Mapping;
 using HospitalApi.Services.Interfaces;
 using Microsoft.AspNetCore.Authorization;
@@ -21,7 +22,13 @@ public class CreateAccountantEndpoint : Endpoint<CreateAccountantRequest, Accoun
 
     public override async Task HandleAsync(CreateAccountantRequest req, CancellationToken ct)
     {
+        if (!await _authenticationService.IsUsernameUnique(req.Username, UserType.Accountant))
+        {
+            await SendErrorsAsync(cancellation: ct);
+            return;
+        }
         var accountant = req.ToAccountant();
+
         accountant.SetPassword(_authenticationService.HashPassword(req.Password));
 
         await _accountantService.CreateAsync(accountant);
