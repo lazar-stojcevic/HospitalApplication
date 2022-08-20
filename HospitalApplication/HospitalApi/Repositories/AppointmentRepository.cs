@@ -109,7 +109,79 @@ public class AppointmentRepository : IAppointmentRepository
             ExpressionAttributeValues = new Dictionary<string, AttributeValue> {
                 {":patient", new AttributeValue { S = patientId.ToString() }}
             },
-            FilterExpression =  "PatientId = :patient",
+            FilterExpression = "PatientId = :patient",
+        };
+        var response = await _dynamoDb.ScanAsync(scanFilter);
+        if (response.Count == 0)
+        {
+            return null;
+        }
+
+        var retVal = new List<AppointmentDto>();
+
+        foreach (var item in response.Items)
+        {
+            var docItem = Document.FromAttributeMap(item);
+            var itemJson = JsonSerializer.Deserialize<AppointmentDto>(docItem.ToJson());
+            if (itemJson != null)
+            {
+                retVal.Add(itemJson);
+            }
+        }
+        return retVal!;
+    }
+
+    public async Task<ICollection<AppointmentDto>?> GetAppointmentsForPatientByDate(Guid patientId, DateTime date)
+    {
+        var startOfDay = new DateTime(date.Year, date.Month, date.Day, 0, 0, 0);
+        var endOfDay = new DateTime(date.Year, date.Month, date.Day, 23, 59, 59);
+
+        ScanRequest scanFilter = new()
+        {
+            TableName = _tableName,
+            ConsistentRead = true,
+            ExpressionAttributeValues = new Dictionary<string, AttributeValue> {
+                {":patient", new AttributeValue { S = patientId.ToString() } },
+                {":start", new AttributeValue { S = startOfDay.ToString("o") } },
+                {":end", new AttributeValue { S = endOfDay.ToString("o") } }
+            },
+            FilterExpression = "PatientId = :patient AND StartTime > :start AND EndTime < :end",
+        };
+        var response = await _dynamoDb.ScanAsync(scanFilter);
+        if (response.Count == 0)
+        {
+            return null;
+        }
+
+        var retVal = new List<AppointmentDto>();
+
+        foreach (var item in response.Items)
+        {
+            var docItem = Document.FromAttributeMap(item);
+            var itemJson = JsonSerializer.Deserialize<AppointmentDto>(docItem.ToJson());
+            if (itemJson != null)
+            {
+                retVal.Add(itemJson);
+            }
+        }
+        return retVal!;
+    }
+
+    public async Task<ICollection<AppointmentDto>?> GetAppointmentsForDoctorByDate(Guid doctorId, DateTime date)
+    {
+        var startOfDay = new DateTime(date.Year, date.Month, date.Day, 0, 0, 0);
+        var endOfDay = new DateTime(date.Year, date.Month, date.Day, 23, 59, 59);
+
+        ScanRequest scanFilter = new()
+        {
+            TableName = _tableName,
+            ConsistentRead = true,
+            ExpressionAttributeValues = new Dictionary<string, AttributeValue> {
+                {":doctor", new AttributeValue { S = doctorId.ToString() } },
+                {":start", new AttributeValue { S = startOfDay.ToString("o") } },
+                {":end", new AttributeValue { S = endOfDay.ToString("o") } }
+            },
+            FilterExpression = "DoctorId = :doctor AND StartTime > :start AND EndTime < :end",
         };
         var response = await _dynamoDb.ScanAsync(scanFilter);
         if (response.Count == 0)

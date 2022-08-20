@@ -1,4 +1,5 @@
-﻿using HospitalApi.Domain;
+﻿using HospitalApi.Contracts.Responses.Appointment;
+using HospitalApi.Domain;
 
 namespace HospitalApi.Services.Interfaces;
 
@@ -13,5 +14,6 @@ public interface IAppointmentService
     Task<ICollection<Appointment>?> GetPatientsAppointmentsAsync(Guid patientId);
 
     Task<bool> UpdateAsync(Appointment appointment);
+    Task<ICollection<FreeAppointmentResponse>?> GetFreeAppointementsForPatientAndDoctor(Guid patientId, Guid doctorId, DateTime date, int appointmentLenght);
 }
 
