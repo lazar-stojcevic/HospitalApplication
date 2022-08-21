@@ -12,6 +12,7 @@ public interface IAppointmentService
     Task<ICollection<Appointment>?> GetAllAsync();
 
     Task<ICollection<Appointment>?> GetPatientsAppointmentsAsync(Guid patientId);
+    Task<ICollection<Appointment>?> GetDoctorsFutureAppointmentsAsync(Guid doctorId);
 
     Task<bool> UpdateAsync(Appointment appointment);
     Task<ICollection<FreeAppointmentResponse>?> GetFreeAppointementsForPatientAndDoctor(Guid patientId, Guid doctorId, DateTime date, int appointmentLenght);

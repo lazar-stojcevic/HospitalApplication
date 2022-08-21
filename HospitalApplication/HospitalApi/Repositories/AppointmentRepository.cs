@@ -233,5 +233,37 @@ public class AppointmentRepository : IAppointmentRepository
         }
         return retVal!;
     }
+
+    public async Task<ICollection<AppointmentDto>?> GetFutureAppointmentsForDoctor(Guid doctorId)
+    {
+        ScanRequest scanFilter = new()
+        {
+            TableName = _tableName,
+            ConsistentRead = true,
+            ExpressionAttributeValues = new Dictionary<string, AttributeValue> {
+                {":doctor", new AttributeValue { S = doctorId.ToString() }},
+                {":now", new AttributeValue { S = DateTime.Now.ToString("o") }}
+            },
+            FilterExpression = "DoctorId = :doctor AND StartTime > :now",
+        };
+        var response = await _dynamoDb.ScanAsync(scanFilter);
+        if (response.Count == 0)
+        {
+            return null;
+        }
+
+        var retVal = new List<AppointmentDto>();
+
+        foreach (var item in response.Items)
+        {
+            var docItem = Document.FromAttributeMap(item);
+            var itemJson = JsonSerializer.Deserialize<AppointmentDto>(docItem.ToJson());
+            if (itemJson != null)
+            {
+                retVal.Add(itemJson);
+            }
+        }
+        return retVal!;
+    }
 }
 

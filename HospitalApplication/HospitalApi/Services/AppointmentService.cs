@@ -84,6 +84,21 @@ public class AppointmentService : IAppointmentService
         return new List<Appointment>();
     }
 
+    public async Task<ICollection<Appointment>?> GetDoctorsFutureAppointmentsAsync(Guid doctorId)
+    {
+        var list = await _appointmentRepository.GetFutureAppointmentsForDoctor(doctorId);
+        var retVal = new List<Appointment>();
+        if (list != null)
+        {
+            foreach (var item in list)
+            {
+                retVal.Add(item.ToAppointment());
+            }
+            return retVal;
+        }
+        return new List<Appointment>();
+    }
+
     public async Task<ICollection<FreeAppointmentResponse>?> GetFreeAppointementsForPatientAndDoctor(Guid patientId, Guid doctorId, DateTime date, int appointmentLenght)
     {
         var patientAppointments = await _appointmentRepository.GetAppointmentsForPatientByDate(patientId, date);
