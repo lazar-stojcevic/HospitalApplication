@@ -56,7 +56,8 @@ public class AuthenticationService : IAuthenticationService
     {
         List<Claim> claims = new List<Claim>
         {
-            new Claim(ClaimTypes.Name, doctor.Username)
+            new Claim(ClaimTypes.Name, doctor.Username),
+            new Claim(ClaimTypes.Role, "DOCTOR")
         };
 
         var key = new SymmetricSecurityKey(System.Text.Encoding.UTF8.GetBytes(_configuration.GetSection("Secret:Token").Value));
@@ -79,6 +80,7 @@ public class AuthenticationService : IAuthenticationService
         List<Claim> claims = new List<Claim>
         {
             new Claim(ClaimTypes.Name, patient.Username),
+            new Claim(ClaimTypes.Role, "PATIENT")
         };
 
         var key = new SymmetricSecurityKey(System.Text.Encoding.UTF8.GetBytes(_configuration.GetSection("Secret:Token").Value));
@@ -101,6 +103,7 @@ public class AuthenticationService : IAuthenticationService
         List<Claim> claims = new List<Claim>
         {
             new Claim(ClaimTypes.Name, accountant.Username),
+            new Claim(ClaimTypes.Role, "ACCOUNTANT")
         };
 
         var key = new SymmetricSecurityKey(System.Text.Encoding.UTF8.GetBytes(_configuration.GetSection("Secret:Token").Value));

@@ -11,10 +11,12 @@ namespace HospitalApi.Endpoints.Doctor;
 public class UpdateDoctorEndpoint : Endpoint<UpdateDoctorRequest, DoctorResponse>
 {
     private readonly IDoctorService _doctorService;
+    private readonly IHttpContextAccessor _httpContextAccessor;
 
-    public UpdateDoctorEndpoint(IDoctorService doctorService)
+    public UpdateDoctorEndpoint(IDoctorService doctorService, IHttpContextAccessor httpContextAccessor)
     {
         _doctorService = doctorService;
+        _httpContextAccessor = httpContextAccessor;
     }
 
     public override async Task HandleAsync(UpdateDoctorRequest req, CancellationToken ct)

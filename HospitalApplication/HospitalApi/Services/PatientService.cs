@@ -4,16 +4,19 @@ using HospitalApi.Domain;
 using HospitalApi.Mapping;
 using HospitalApi.Repositories.Interfaces;
 using HospitalApi.Services.Interfaces;
+using System.Security.Claims;
 
 namespace HospitalApi.Services;
 
 public class PatientService : IPatientService
 {
     private readonly IPatientRepository _patientRepository;
+    private readonly IHttpContextAccessor _contextAccessor;
 
-    public PatientService(IPatientRepository patientRepository)
+    public PatientService(IPatientRepository patientRepository, IHttpContextAccessor contextAccessor)
     {
         _patientRepository = patientRepository;
+        _contextAccessor = contextAccessor;
     }
 
     public async Task<bool> CreateAsync(Patient patient)
@@ -34,6 +37,15 @@ public class PatientService : IPatientService
 
     public async Task<Patient?> GetAsync(Guid id)
     {
+        var result = string.Empty;
+        if (_contextAccessor.HttpContext != null)
+        {
+            result = _contextAccessor.HttpContext.User.FindFirstValue(ClaimTypes.Role);
+        }
+        if (result.Equals("DOCTOR"))
+        {
+            Console.WriteLine("aaa");
+        }
         var patientDto = await _patientRepository.GetAsync(id);
         return patientDto?.ToPatient();
     }

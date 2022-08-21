@@ -1,6 +1,7 @@
 using Amazon;
 using Amazon.DynamoDBv2;
 using FastEndpoints;
+using FastEndpoints.Security;
 using FastEndpoints.Swagger;
 using HospitalApi.Contracts.Responses;
 using HospitalApi.Repositories;
@@ -8,6 +9,9 @@ using HospitalApi.Repositories.Interfaces;
 using HospitalApi.Services;
 using HospitalApi.Services.Interfaces;
 using HospitalApi.Validation;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.IdentityModel.Tokens;
+using System.Text;
 
 var builder = WebApplication.CreateBuilder(args);
 var config = builder.Configuration;
@@ -16,6 +20,7 @@ builder.Services.AddAWSLambdaHosting(LambdaEventSource.HttpApi);
 
 builder.Services.AddFastEndpoints();
 builder.Services.AddSwaggerDoc();
+builder.Services.AddHttpContextAccessor();
 
 builder.Services.AddSingleton<IAmazonDynamoDB>(_ => new AmazonDynamoDBClient(RegionEndpoint.EUCentral1));
 
@@ -38,6 +43,21 @@ builder.Services.AddSingleton<IAuthenticationService, AuthenticationService>();
 builder.Services.AddSingleton<IAnonymizationService, AnonymizationService>();
 builder.Services.AddSingleton<IAccountantService, AccountantService>();
 
+/*
+builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme).AddJwtBearer(options =>
+{
+    options.TokenValidationParameters = new TokenValidationParameters
+    {
+        ValidateIssuerSigningKey = false,
+        IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(builder.Configuration.GetSection("Secret:Token").Value)),
+        ValidateIssuer = false,
+        ValidateAudience = false,
+    };
+});
+*/
+
+builder.Services.AddAuthenticationJWTBearer(builder.Configuration.GetSection("Secret:Token").Value); //add this
+
 var app = builder.Build();
 
 app.UseMiddleware<ValidationExceptionMiddleware>();
@@ -54,5 +74,11 @@ app.UseFastEndpoints(x =>
 
 app.UseOpenApi();
 app.UseSwaggerUi3(s => s.ConfigureDefaults());
+
+app.UseAuthentication();
+
+app.UseAuthorization();
+
+app.UseFastEndpoints();
 
 app.Run();
