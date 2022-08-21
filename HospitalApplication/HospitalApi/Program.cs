@@ -61,6 +61,14 @@ builder.Services.AddAuthenticationJWTBearer(builder.Configuration.GetSection("Se
 var app = builder.Build();
 
 app.UseMiddleware<ValidationExceptionMiddleware>();
+
+app.UseOpenApi();
+app.UseSwaggerUi3(s => s.ConfigureDefaults());
+
+app.UseAuthentication();
+
+app.UseAuthorization();
+
 app.UseFastEndpoints(x =>
 {
     x.ErrorResponseBuilder = (failures, _) =>
@@ -71,14 +79,5 @@ app.UseFastEndpoints(x =>
         };
     };
 });
-
-app.UseOpenApi();
-app.UseSwaggerUi3(s => s.ConfigureDefaults());
-
-app.UseAuthentication();
-
-app.UseAuthorization();
-
-app.UseFastEndpoints();
 
 app.Run();
