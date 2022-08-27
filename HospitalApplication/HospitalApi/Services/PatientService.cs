@@ -37,15 +37,6 @@ public class PatientService : IPatientService
 
     public async Task<Patient?> GetAsync(Guid id)
     {
-        var result = string.Empty;
-        if (_contextAccessor.HttpContext != null)
-        {
-            result = _contextAccessor.HttpContext.User.FindFirstValue(ClaimTypes.Role);
-        }
-        if (result.Equals("DOCTOR"))
-        {
-            Console.WriteLine("aaa");
-        }
         var patientDto = await _patientRepository.GetAsync(id);
         return patientDto?.ToPatient();
     }

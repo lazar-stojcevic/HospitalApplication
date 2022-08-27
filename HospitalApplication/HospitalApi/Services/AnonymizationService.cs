@@ -1,10 +1,16 @@
 ﻿using HospitalApi.Contracts.Data;
+using HospitalApi.Contracts.Responses.Appointment;
+using HospitalApi.Contracts.Responses.Financial;
+using HospitalApi.Contracts.Responses.Patient;
 using HospitalApi.Domain;
 using HospitalApi.Services.Interfaces;
+using System.Text.RegularExpressions;
 
 namespace HospitalApi.Services;
 public class AnonymizationService : IAnonymizationService
 {
+
+    public static Random gen = new Random();
     public ICollection<AccountDto>? AnonymiseAccountsByMasking(ICollection<Account>? accounts)
     {
         var retVal = new List<AccountDto>();
@@ -12,7 +18,7 @@ public class AnonymizationService : IAnonymizationService
         retVal.AddRange(accounts.Select(account => new AccountDto
         {
             Id = account.Id.Value.ToString(),
-            AccountNumber = "*******************",
+            AccountNumber = AnonymiseString(account.AccountNumber.Value),
             Balance = account.Balance.Value,
             PatientId = account.PatientId.Value.ToString(),
         }));
@@ -32,7 +38,7 @@ public class AnonymizationService : IAnonymizationService
             EndTime = appointment.EndTime.Value,
             StartTime = appointment.StartTime.Value,
             Price = appointment.Price?.Value ?? 0,
-            Report = appointment.Report?.Value ?? string.Empty,
+            Report = AnonymiseString(appointment.Report?.Value ?? string.Empty),
         }));
 
         return retVal;
@@ -49,15 +55,15 @@ public class AnonymizationService : IAnonymizationService
         retVal.AddRange(doctors.Select(doctor => new DoctorDto
         {
             Id = doctor.Id.Value.ToString(),
-            Email = "******@*****.com",
+            Email = AnonymiseString(doctor.Email.Value),
             DateOfBirth = DateTime.Today.AddDays(-gen.Next(range)).AddYears(24),
-            FirstName = "*******",
-            Surname = "****************",
+            FirstName = AnonymiseString(doctor.FirstName.Value),
+            Surname = AnonymiseString(doctor.Surname.Value),
             MedicalSpeciality = doctor.MedicalSpeciality.Value.ToString(),
-            PersonalNumber = "*************",
-            PhoneNumber = "*****-*****",
+            PersonalNumber = AnonymiseString(doctor.PersonalNumber.Value),
+            PhoneNumber = AnonymiseString(doctor.PhoneNumber.Value),
             Password = "/",
-            Username = "***********"
+            Username = doctor.Username.Value,
         }));
         return retVal;
     }
@@ -66,23 +72,21 @@ public class AnonymizationService : IAnonymizationService
     {
         var retVal = new List<PatientDto>();
 
-        Random gen = new Random();
-
         var range = 45 * 365; //45 years  
 
         retVal.AddRange(patients.Select(patient => new PatientDto
         {
             Id = patient.Id.Value.ToString(),
-            Email = "*********@*****.com",
+            Email = AnonymiseString(patient.Email.Value),
             DateOfBirth = DateTime.Today.AddDays(-gen.Next(range)).AddYears(24),
-            FirstName = "*******",
-            Surname = "****************",
-            PersonalNumber = "*************",
-            PhoneNumber = "*****-*****",
+            FirstName = AnonymiseString(patient.FirstName.Value),
+            Surname = AnonymiseString(patient.Surname.Value),
+            PersonalNumber = AnonymiseString(patient.PersonalNumber.Value),
+            PhoneNumber = AnonymiseString(patient.PhoneNumber.Value),
             Password = "/",
-            Username = "***********",
+            Username = patient.Username.Value,
             AccountId = patient.AccountId.Value.ToString(),
-            Adress = "******* *******",
+            Adress = AnonymiseString(patient.Adress.Value),
             BloodType = patient.BloodType.Value,
             Gender = patient.Gender.Value,
             Height = patient.Height.Value,
@@ -112,6 +116,60 @@ public class AnonymizationService : IAnonymizationService
             Username = "***********"
         }));
         return retVal;
+    }
+    
+    public PatientResponse AnonymisePatiendData(Patient patient)
+    {
+        Random gen = new Random();
+        var range = 45 * 365; //45 years  
+        return new PatientResponse
+        {
+            Id = Guid.Parse(patient.Id.Value.ToString()),
+            Email = AnonymiseString(patient.Email.Value),
+            DateOfBirth = DateTime.Today.AddDays(-gen.Next(range)).AddYears(24),
+            FirstName = AnonymiseString(patient.FirstName.Value),
+            Surname = AnonymiseString(patient.Surname.Value),
+            PersonalNumber = AnonymiseString(patient.PersonalNumber.Value),
+            PhoneNumber = AnonymiseString(patient.PhoneNumber.Value),
+            Username = patient.Username.Value,
+            AccountId = Guid.Parse(patient.AccountId.Value.ToString()),
+            Adress = AnonymiseString(patient.Adress.Value),
+            BloodType = patient.BloodType.Value,
+            Gender = patient.Gender.Value,
+            Height = patient.Height.Value,
+            Weight = patient.Weight.Value,
+
+        };
+    }
+
+    public AccountResponse AnonymiseAccountData(Account account)
+    {
+        return new AccountResponse
+        {
+            Id = Guid.Parse(account.Id.Value.ToString()),
+            AccountNumber = AnonymiseString(account.AccountNumber.Value),
+            Balance = account.Balance.Value,
+            PatientId = Guid.Parse(account.PatientId.Value.ToString()),
+        };
+    }
+    
+    public AppointmentResponse AnonymiseAppointmentData(Appointment appointment)
+    {
+        return new AppointmentResponse
+        {
+            Id = Guid.Parse(appointment.Id.Value.ToString()),
+            PatientId = Guid.Parse(appointment.PatientId.Value.ToString()),
+            DoctorId = Guid.Parse(appointment.DoctorId.Value.ToString()),
+            EndTime = appointment.EndTime.Value,
+            StartTime = appointment.StartTime.Value,
+            Price = appointment.Price?.Value ?? 0,
+            Report = AnonymiseString(appointment.Report?.Value ?? string.Empty),
+        };
+    }
+
+    private string AnonymiseString(string report)
+    {
+        return new Regex("\\S").Replace(report, "X");
     }
 }
 
