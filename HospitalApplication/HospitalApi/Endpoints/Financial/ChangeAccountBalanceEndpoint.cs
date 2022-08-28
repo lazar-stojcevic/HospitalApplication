@@ -6,7 +6,7 @@ using Microsoft.AspNetCore.Authorization;
 
 namespace HospitalApi.Endpoints.Financial;
 
-[HttpPut("account/change"), AllowAnonymous]
+[HttpPut("account/change"), Authorize(Roles = "ACCOUNTANT")]
 public class ChangeAccountBalanceEndpoint : Endpoint<ChangeAccountBalanceRequest, bool>
 {
     private readonly IAccountService _accountService;

@@ -1,4 +1,5 @@
 ﻿using HospitalApi.Contracts.Data;
+using HospitalApi.Contracts.Responses.Accountant;
 using HospitalApi.Contracts.Responses.Appointment;
 using HospitalApi.Contracts.Responses.Financial;
 using HospitalApi.Contracts.Responses.Patient;
@@ -99,21 +100,19 @@ public class AnonymizationService : IAnonymizationService
     {
         var retVal = new List<AccountantDto>();
 
-        Random gen = new Random();
-
         var range = 45 * 365; //45 years  
 
-        retVal.AddRange(accountants.Select(doctor => new AccountantDto
+        retVal.AddRange(accountants.Select(accountant => new AccountantDto
         {
-            Id = doctor.Id.Value.ToString(),
-            Email = "******@*****.com",
+            Id = accountant.Id.Value.ToString(),
+            Email = AnonymiseString(accountant.Email.Value),
             DateOfBirth = DateTime.Today.AddDays(-gen.Next(range)).AddYears(24),
-            FirstName = "*******",
-            Surname = "****************",
-            PersonalNumber = "*************",
-            PhoneNumber = "*****-*****",
+            FirstName = AnonymiseString(accountant.FirstName.Value),
+            Surname = AnonymiseString(accountant.Surname.Value),
+            PersonalNumber = AnonymiseString(accountant.PersonalNumber.Value),
+            PhoneNumber = AnonymiseString(accountant.PhoneNumber.Value),
             Password = "/",
-            Username = "***********"
+            Username = accountant.Username.Value
         }));
         return retVal;
     }
@@ -167,9 +166,26 @@ public class AnonymizationService : IAnonymizationService
         };
     }
 
+    public AccountantResponse AnonymiseAccountantData(Accountant accountant)
+    {
+        var range = 45 * 365;
+
+        return new AccountantResponse
+        {
+            Id = accountant.Id.Value,
+            Email = AnonymiseString(accountant.Email.Value),
+            DateOfBirth = DateTime.Today.AddDays(-gen.Next(range)).AddYears(24),
+            FirstName = AnonymiseString(accountant.FirstName.Value),
+            Surname = AnonymiseString(accountant.Surname.Value),
+            PersonalNumber = AnonymiseString(accountant.PersonalNumber.Value),
+            PhoneNumber = AnonymiseString(accountant.PhoneNumber.Value),
+            Username = accountant.Username.Value
+        };
+    }
+
     private string AnonymiseString(string report)
     {
-        return new Regex("\\S").Replace(report, "X");
+        return new Regex("\\S").Replace(report, "*");
     }
 }
 

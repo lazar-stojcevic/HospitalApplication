@@ -6,7 +6,7 @@ using HospitalApi.Services.Interfaces;
 using Microsoft.AspNetCore.Authorization;
 
 namespace HospitalApi.Endpoints.Appointment;
-[HttpPut("appointments/finish"), AllowAnonymous]
+[HttpPut("appointments/finish"), Authorize(Roles = "DOCTOR")]
 public class FinishAppointmentEndpoint : Endpoint<FinishAppointmentRequest, AppointmentResponse>
 {
     private readonly IAppointmentService _appointmentService;

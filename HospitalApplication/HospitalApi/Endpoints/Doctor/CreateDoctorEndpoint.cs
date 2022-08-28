@@ -8,7 +8,7 @@ using Microsoft.AspNetCore.Authorization;
 
 namespace HospitalApi.Endpoints.Doctor;
 
-[HttpPost("doctors"), AllowAnonymous]
+[HttpPost("doctors"), Authorize(Roles = "ADMIN")]
 public class CreateDoctorEndpoint : Endpoint<CreateDoctorRequest, DoctorResponse>
 {
     private readonly IDoctorService _doctorService;

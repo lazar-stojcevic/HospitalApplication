@@ -11,7 +11,7 @@ using Microsoft.AspNetCore.Authorization;
 
 namespace HospitalApi.Endpoints.ExportDatabase;
 
-[HttpGet("export"), AllowAnonymous]
+[HttpGet("export"), Authorize(Roles = "ADMIN")]
 public class ExportDatabaseEndpoint : Endpoint<EmptyRequest, ExportDatabaseResponse>
 {
     private readonly IDoctorService _doctorService;

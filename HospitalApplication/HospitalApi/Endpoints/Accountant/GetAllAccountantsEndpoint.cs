@@ -6,7 +6,7 @@ using Microsoft.AspNetCore.Authorization;
 
 namespace HospitalApi.Endpoints.Accountant;
 
-[HttpGet("accountants"), AllowAnonymous]
+[HttpGet("accountants"), Authorize(Roles = "ADMIN,DOCTOR,ACCOUNTANT")]
 public class GetAllAccountantsEndpoint : Endpoint<EmptyRequest, GetAllAccountantsResponse>
 {
     private readonly IAccountantService _accountantService;

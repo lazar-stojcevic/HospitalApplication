@@ -7,7 +7,7 @@ using Microsoft.AspNetCore.Authorization;
 
 namespace HospitalApi.Endpoints.Doctor;
 
-[HttpGet("doctors/{id:guid}"), AllowAnonymous]
+[HttpGet("doctors/{id:guid}"), Authorize]
 public class GetDoctorEndpoint : Endpoint<GetDoctorRequest, DoctorResponse>
 {
     private readonly IDoctorService _doctorService;

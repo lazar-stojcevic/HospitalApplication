@@ -5,7 +5,7 @@ using Microsoft.AspNetCore.Authorization;
 
 namespace HospitalApi.Endpoints.Patient;
 
-[HttpDelete("patients/{id:guid}"), AllowAnonymous]
+[HttpDelete("patients/{id:guid}"), Authorize(Roles = "ADMIN")]
 public class DeletePatientEndpoint : Endpoint<DeletePatientRequest>
 {
     private readonly IPatientService _patientService;

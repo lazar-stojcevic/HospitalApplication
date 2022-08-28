@@ -4,10 +4,11 @@ using HospitalApi.Contracts.Responses.Accountant;
 using HospitalApi.Mapping;
 using HospitalApi.Services.Interfaces;
 using Microsoft.AspNetCore.Authorization;
+using System.Security.Claims;
 
 namespace HospitalApi.Endpoints.Accountant;
 
-[HttpPut("accountants/{id:guid}"), AllowAnonymous]
+[HttpPut("accountants/{id:guid}"), Authorize(Roles = "ACCOUNTANT")]
 public class UpdateAccountantEndpoint : Endpoint<UpdateAccountantRequest, AccountantResponse>
 {
     private readonly IAccountantService _accoutantService;
@@ -19,11 +20,24 @@ public class UpdateAccountantEndpoint : Endpoint<UpdateAccountantRequest, Accoun
 
     public override async Task HandleAsync(UpdateAccountantRequest req, CancellationToken ct)
     {
+        var context = HttpContext;
+        var username = string.Empty;
+        if (context.User != null)
+        {
+            username = context.User.FindFirstValue(ClaimTypes.Name);
+        }
+
         var existingAccountant = await _accoutantService.GetAsync(Guid.Parse(req.Id));
 
-        if (existingAccountant is null)
+        if (existingAccountant == null)
         {
-            await SendNotFoundAsync(ct);
+            await SendErrorsAsync(cancellation: ct);
+            return;
+        }
+
+        if (!existingAccountant.Username.Equals(username))
+        {
+            await SendForbiddenAsync(ct);
             return;
         }
 

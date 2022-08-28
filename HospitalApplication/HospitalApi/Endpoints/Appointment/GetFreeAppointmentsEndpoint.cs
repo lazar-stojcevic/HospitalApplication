@@ -6,7 +6,7 @@ using Microsoft.AspNetCore.Authorization;
 
 namespace HospitalApi.Endpoints.Appointment;
 
-[HttpGet("appointments/free/{patientid:guid}/{doctorId:guid}/{date}/{appointmentLength}"), AllowAnonymous]
+[HttpGet("appointments/free/{patientid:guid}/{doctorId:guid}/{date}/{appointmentLength}"), Authorize(Roles = "DOCTOR,PATIENT,ADMIN")]
 public class GetFreeAppointmentsEndpoint : Endpoint<GetAvailableAppointmentsForDate, MultipleFreeAppointmentsResponse>
 {
     private readonly IAppointmentService _appointmentService;

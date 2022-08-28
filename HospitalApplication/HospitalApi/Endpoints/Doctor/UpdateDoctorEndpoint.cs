@@ -4,28 +4,40 @@ using HospitalApi.Contracts.Responses.Doctor;
 using HospitalApi.Mapping;
 using HospitalApi.Services.Interfaces;
 using Microsoft.AspNetCore.Authorization;
+using System.Security.Claims;
 
 namespace HospitalApi.Endpoints.Doctor;
 
-[HttpPut("doctors/{id:guid}"), AllowAnonymous]
+[HttpPut("doctors/{id:guid}"), Authorize(Roles = "DOCTOR")]
 public class UpdateDoctorEndpoint : Endpoint<UpdateDoctorRequest, DoctorResponse>
 {
     private readonly IDoctorService _doctorService;
-    private readonly IHttpContextAccessor _httpContextAccessor;
 
-    public UpdateDoctorEndpoint(IDoctorService doctorService, IHttpContextAccessor httpContextAccessor)
+    public UpdateDoctorEndpoint(IDoctorService doctorService)
     {
         _doctorService = doctorService;
-        _httpContextAccessor = httpContextAccessor;
     }
 
     public override async Task HandleAsync(UpdateDoctorRequest req, CancellationToken ct)
     {
+        var context = HttpContext;
+        var username = string.Empty;
+        if (context.User != null)
+        {
+            username = context.User.FindFirstValue(ClaimTypes.Name);
+        }
+
         var existingDoctor = await _doctorService.GetAsync(Guid.Parse(req.Id));
 
         if (existingDoctor is null)
         {
             await SendNotFoundAsync(ct);
+            return;
+        }
+
+        if (!existingDoctor.Username.Equals(username))
+        {
+            await SendForbiddenAsync(ct);
             return;
         }
 
