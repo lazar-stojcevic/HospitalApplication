@@ -13,14 +13,16 @@ public class AuthenticationService : IAuthenticationService
     private readonly IDoctorRepository _doctorRepository;
     private readonly IPatientRepository _patientRepository;
     private readonly IAccountantRepository _accountantRepository;
+    private readonly IAdminRepository _adminRepository;
     private readonly IConfiguration _configuration;
 
-    public AuthenticationService(IDoctorRepository doctorRepository, IPatientRepository patientRepository, IConfiguration configuration, IAccountantRepository accountantRepository)
+    public AuthenticationService(IDoctorRepository doctorRepository, IPatientRepository patientRepository, IConfiguration configuration, IAccountantRepository accountantRepository, IAdminRepository adminRepository)
     {
         _doctorRepository = doctorRepository;
         _patientRepository = patientRepository;
         _configuration = configuration;
         _accountantRepository = accountantRepository;
+        _adminRepository = adminRepository;
     }
     public async Task<string> AuthenticateUser(LoginDto login)
     {
@@ -43,6 +45,13 @@ public class AuthenticationService : IAuthenticationService
         if (accountant != null && BCrypt.Net.BCrypt.Verify(login.Password, accountant.Password))
         {
             return GenerateJwtForAccountant(accountant);
+        }
+
+        var admin = await _adminRepository.GetByUsername(login.Username);
+
+        if (admin != null && BCrypt.Net.BCrypt.Verify(login.Password, admin.Password))
+        {
+            return GenerateJwtForAdmin(admin);
         }
         return string.Empty;
     }
@@ -121,6 +130,29 @@ public class AuthenticationService : IAuthenticationService
         return jwt;
     }
 
+    private string GenerateJwtForAdmin(AdminDto admin)
+    {
+        List<Claim> claims = new List<Claim>
+        {
+            new Claim(ClaimTypes.Name, admin.Username),
+            new Claim(ClaimTypes.Role, "ADMIN")
+        };
+
+        var key = new SymmetricSecurityKey(System.Text.Encoding.UTF8.GetBytes(_configuration.GetSection("Secret:Token").Value));
+
+        var cred = new SigningCredentials(key, SecurityAlgorithms.HmacSha512Signature);
+
+        var token = new JwtSecurityToken(
+            claims: claims,
+            expires: DateTime.UtcNow.AddMinutes(60),
+            signingCredentials: cred
+        );
+
+        var jwt = new JwtSecurityTokenHandler().WriteToken(token);
+
+        return jwt;
+    }
+
     public async Task<bool> IsUsernameUnique(string username, UserType userType)
     {
         switch (userType)
@@ -134,6 +166,9 @@ public class AuthenticationService : IAuthenticationService
             case UserType.Accountant:
                 var accoutnant = await _accountantRepository.GetByUsername(username);
                 return accoutnant == null;
+            case UserType.Admin:
+                var admin = await _adminRepository.GetByUsername(username);
+                return admin == null;
             default:
                 return false;
         }

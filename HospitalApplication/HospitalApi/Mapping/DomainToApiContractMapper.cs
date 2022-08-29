@@ -1,4 +1,5 @@
 ﻿using HospitalApi.Contracts.Responses.Accountant;
+using HospitalApi.Contracts.Responses.Admin;
 using HospitalApi.Contracts.Responses.Appointment;
 using HospitalApi.Contracts.Responses.Doctor;
 using HospitalApi.Contracts.Responses.Financial;
@@ -174,6 +175,39 @@ public static class DomainToApiContractMapper
                 StartTime = appointment.StartTime.Value,
                 Report = appointment.Report?.Value ?? string.Empty,
                 Price = appointment.Price?.Value ?? 0
+            })
+        };
+    }
+
+    public static AdminResponse ToAdminResponse(this Admin admin)
+    {
+        return new AdminResponse
+        {
+            Id = admin.Id.Value,
+            Email = admin.Email.Value,
+            Username = admin.Username.Value,
+            FirstName = admin.FirstName.Value,
+            Surname = admin.Surname.Value,
+            PersonalNumber = admin.PersonalNumber.Value,
+            PhoneNumber = admin.PhoneNumber.Value,
+            DateOfBirth = admin.DateOfBirth.Value.ToDateTime(TimeOnly.MinValue),
+        };
+    }
+
+    public static GetAllAdminsResponse ToAdminsResponse(this IEnumerable<Admin> admins)
+    {
+        return new GetAllAdminsResponse
+        {
+            Admins = admins.Select(admin => new AdminResponse
+            {
+                Id = admin.Id.Value,
+                Email = admin.Email.Value,
+                Username = admin.Username.Value,
+                FirstName = admin.FirstName.Value,
+                Surname = admin.Surname.Value,
+                PersonalNumber = admin.PersonalNumber.Value,
+                PhoneNumber = admin.PhoneNumber.Value,
+                DateOfBirth = admin.DateOfBirth.Value.ToDateTime(TimeOnly.MinValue)
             })
         };
     }

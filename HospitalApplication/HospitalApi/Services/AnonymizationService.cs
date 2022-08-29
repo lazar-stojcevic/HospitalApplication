@@ -1,5 +1,6 @@
 ﻿using HospitalApi.Contracts.Data;
 using HospitalApi.Contracts.Responses.Accountant;
+using HospitalApi.Contracts.Responses.Admin;
 using HospitalApi.Contracts.Responses.Appointment;
 using HospitalApi.Contracts.Responses.Financial;
 using HospitalApi.Contracts.Responses.Patient;
@@ -116,7 +117,28 @@ public class AnonymizationService : IAnonymizationService
         }));
         return retVal;
     }
-    
+
+    public ICollection<AdminDto>? AnonymiseAdminsByMasking(ICollection<Admin>? admins)
+    {
+        var retVal = new List<AdminDto>();
+
+        var range = 45 * 365; //45 years  
+
+        retVal.AddRange(admins.Select(admin => new AdminDto
+        {
+            Id = admin.Id.Value.ToString(),
+            Email = AnonymiseString(admin.Email.Value),
+            DateOfBirth = DateTime.Today.AddDays(-gen.Next(range)).AddYears(24),
+            FirstName = AnonymiseString(admin.FirstName.Value),
+            Surname = AnonymiseString(admin.Surname.Value),
+            PersonalNumber = AnonymiseString(admin.PersonalNumber.Value),
+            PhoneNumber = AnonymiseString(admin.PhoneNumber.Value),
+            Password = "/",
+            Username = admin.Username.Value
+        }));
+        return retVal;
+    }
+
     public PatientResponse AnonymisePatiendData(Patient patient)
     {
         Random gen = new Random();
@@ -180,6 +202,23 @@ public class AnonymizationService : IAnonymizationService
             PersonalNumber = AnonymiseString(accountant.PersonalNumber.Value),
             PhoneNumber = AnonymiseString(accountant.PhoneNumber.Value),
             Username = accountant.Username.Value
+        };
+    }
+
+    public AdminResponse AnonymiseAdminData(Admin admin)
+    {
+        var range = 45 * 365;
+
+        return new AdminResponse
+        {
+            Id = admin.Id.Value,
+            Email = AnonymiseString(admin.Email.Value),
+            DateOfBirth = DateTime.Today.AddDays(-gen.Next(range)).AddYears(24),
+            FirstName = AnonymiseString(admin.FirstName.Value),
+            Surname = AnonymiseString(admin.Surname.Value),
+            PersonalNumber = AnonymiseString(admin.PersonalNumber.Value),
+            PhoneNumber = AnonymiseString(admin.PhoneNumber.Value),
+            Username = admin.Username.Value
         };
     }
 

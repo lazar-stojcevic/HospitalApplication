@@ -1,10 +1,12 @@
 ﻿using HospitalApi.Contracts.Requests.Accountant;
+using HospitalApi.Contracts.Requests.Admin;
 using HospitalApi.Contracts.Requests.Appointment;
 using HospitalApi.Contracts.Requests.Doctor;
 using HospitalApi.Contracts.Requests.Financial;
 using HospitalApi.Contracts.Requests.Patient;
 using HospitalApi.Domain;
 using HospitalApi.Domain.Common.Accountant;
+using HospitalApi.Domain.Common.Admin;
 using HospitalApi.Domain.Common.Appointment;
 using HospitalApi.Domain.Common.Doctor;
 using HospitalApi.Domain.Common.Financial;
@@ -137,5 +139,35 @@ public static class ApiContractToDomainMapper
         };
         appointment.InitAppointment();
         return appointment;
+    }
+
+    public static Admin ToAdmin(this CreateAdminRequest request)
+    {
+        return new Admin
+        {
+            Id = AdminId.From(Guid.NewGuid()),
+            Email = EmailAddress.From(request.Email),
+            Username = Username.From(request.Username),
+            FirstName = FirstName.From(request.FirstName),
+            Surname = Surname.From(request.Surname),
+            PersonalNumber = PersonalNumber.From(request.PersonalNumber),
+            PhoneNumber = PhoneNumber.From(request.PhoneNumber),
+            DateOfBirth = DateOfBirth.From(DateOnly.FromDateTime(request.DateOfBirth)),
+        };
+    }
+
+    public static Admin ToAdmin(this UpdateAdminRequest request)
+    {
+        return new Admin
+        {
+            Id = AdminId.From(Guid.Parse(request.Id)),
+            Email = EmailAddress.From(request.Email),
+            Username = Username.From(request.Username),
+            FirstName = FirstName.From(request.FirstName),
+            Surname = Surname.From(request.Surname),
+            PersonalNumber = PersonalNumber.From(request.PersonalNumber),
+            PhoneNumber = PhoneNumber.From(request.PhoneNumber),
+            DateOfBirth = DateOfBirth.From(DateOnly.FromDateTime(request.DateOfBirth)),
+        };
     }
 }

@@ -84,4 +84,20 @@ public static class DomainToDtoMapper
             Price = appointmen.Price?.Value ?? 0,
         };
     }
+
+    public static AdminDto ToAdminDto(this Admin admin)
+    {
+        return new AdminDto
+        {
+            Id = admin.Id.Value.ToString(),
+            Email = admin.Email.Value,
+            Username = admin.Username.Value,
+            FirstName = admin.FirstName.Value,
+            Surname = admin.Surname.Value,
+            PersonalNumber = admin.PersonalNumber.Value,
+            PhoneNumber = admin.PhoneNumber.Value,
+            DateOfBirth = admin.DateOfBirth.Value.ToDateTime(TimeOnly.MinValue),
+            Password = admin.Password
+        };
+    }
 }

@@ -1,6 +1,7 @@
 ﻿using HospitalApi.Contracts.Data;
 using HospitalApi.Domain;
 using HospitalApi.Domain.Common.Accountant;
+using HospitalApi.Domain.Common.Admin;
 using HospitalApi.Domain.Common.Appointment;
 using HospitalApi.Domain.Common.Doctor;
 using HospitalApi.Domain.Common.Financial;
@@ -71,6 +72,21 @@ public static class DtoToDomainMapper
             PhoneNumber = PhoneNumber.From(accountantDto.PhoneNumber),
             PersonalNumber = PersonalNumber.From(accountantDto.PersonalNumber),
             DateOfBirth = DateOfBirth.From(DateOnly.FromDateTime(accountantDto.DateOfBirth))
+        };
+    }
+
+    public static Admin ToAdmin(this AdminDto adminDto)
+    {
+        return new Admin
+        {
+            Id = AdminId.From(Guid.Parse(adminDto.Id)),
+            Email = EmailAddress.From(adminDto.Email),
+            Username = Username.From(adminDto.Username),
+            FirstName = FirstName.From(adminDto.FirstName),
+            Surname = Surname.From(adminDto.Surname),
+            PhoneNumber = PhoneNumber.From(adminDto.PhoneNumber),
+            PersonalNumber = PersonalNumber.From(adminDto.PersonalNumber),
+            DateOfBirth = DateOfBirth.From(DateOnly.FromDateTime(adminDto.DateOfBirth))
         };
     }
 

@@ -34,6 +34,8 @@ builder.Services.AddSingleton<IAppointmentRepository>(provider =>
     new AppointmentRepository(provider.GetRequiredService<IAmazonDynamoDB>(), config.GetValue<string>("Database:AppointmentsTable")));
 builder.Services.AddSingleton<IAccountantRepository>(provider =>
     new AccountantRepository(provider.GetRequiredService<IAmazonDynamoDB>(), config.GetValue<string>("Database:AccountantsTable")));
+builder.Services.AddSingleton<IAdminRepository>(provider =>
+    new AdminRepository(provider.GetRequiredService<IAmazonDynamoDB>(), config.GetValue<string>("Database:AdminsTable")));
 
 builder.Services.AddSingleton<IPatientService, PatientService>();
 builder.Services.AddSingleton<IAccountService, AccountService>();
@@ -42,21 +44,9 @@ builder.Services.AddSingleton<IAppointmentService, AppointmentService>();
 builder.Services.AddSingleton<IAuthenticationService, AuthenticationService>();
 builder.Services.AddSingleton<IAnonymizationService, AnonymizationService>();
 builder.Services.AddSingleton<IAccountantService, AccountantService>();
+builder.Services.AddSingleton<IAdminService, AdminService>();
 
-/*
-builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme).AddJwtBearer(options =>
-{
-    options.TokenValidationParameters = new TokenValidationParameters
-    {
-        ValidateIssuerSigningKey = false,
-        IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(builder.Configuration.GetSection("Secret:Token").Value)),
-        ValidateIssuer = false,
-        ValidateAudience = false,
-    };
-});
-*/
-
-builder.Services.AddAuthenticationJWTBearer(builder.Configuration.GetSection("Secret:Token").Value); //add this
+builder.Services.AddAuthenticationJWTBearer(builder.Configuration.GetSection("Secret:Token").Value);
 
 var app = builder.Build();
 

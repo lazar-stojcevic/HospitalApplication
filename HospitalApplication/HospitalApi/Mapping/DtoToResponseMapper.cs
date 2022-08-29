@@ -1,5 +1,6 @@
 ﻿using HospitalApi.Contracts.Data;
 using HospitalApi.Contracts.Responses.Accountant;
+using HospitalApi.Contracts.Responses.Admin;
 using HospitalApi.Contracts.Responses.Appointment;
 using HospitalApi.Contracts.Responses.Doctor;
 using HospitalApi.Contracts.Responses.Financial;
@@ -79,6 +80,23 @@ namespace HospitalApi.Mapping
                 PersonalNumber = accountant.PersonalNumber,
                 PhoneNumber = accountant.PhoneNumber,
                 Username = accountant.Username,
+            }));
+            return response;
+        }
+
+        public static IEnumerable<AdminResponse> ToAdminsResponse(this IEnumerable<AdminDto> admins)
+        {
+            var response = new List<AdminResponse>();
+            response.AddRange(admins.Select(admin => new AdminResponse
+            {
+                Id = Guid.Parse(admin.Id),
+                DateOfBirth = admin.DateOfBirth,
+                Email = admin.Email,
+                FirstName = admin.FirstName,
+                Surname = admin.Surname,
+                PersonalNumber = admin.PersonalNumber,
+                PhoneNumber = admin.PhoneNumber,
+                Username = admin.Username,
             }));
             return response;
         }

@@ -1,6 +1,6 @@
-﻿namespace HospitalApi.Contracts.Requests.Accountant;
+﻿namespace HospitalApi.Contracts.Requests.Admin;
 
-public class UpdateAccountantRequest
+public class UpdateAdminRequest
 {
     public string Id { get; init; } = default!;
     public string Username { get; init; } = default!;

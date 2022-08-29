@@ -1,5 +1,6 @@
 ﻿using HospitalApi.Contracts.Data;
 using HospitalApi.Contracts.Responses.Accountant;
+using HospitalApi.Contracts.Responses.Admin;
 using HospitalApi.Contracts.Responses.Appointment;
 using HospitalApi.Contracts.Responses.Financial;
 using HospitalApi.Contracts.Responses.Patient;
@@ -18,5 +19,7 @@ public interface IAnonymizationService
     AccountResponse AnonymiseAccountData(Account account);
     AppointmentResponse AnonymiseAppointmentData(Appointment appointment);
     AccountantResponse AnonymiseAccountantData(Accountant accountant);
+    AdminResponse AnonymiseAdminData(Admin admin);
+    ICollection<AdminDto>? AnonymiseAdminsByMasking(ICollection<Admin>? admins);
 }
 
