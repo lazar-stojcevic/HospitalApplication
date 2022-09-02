@@ -2,6 +2,7 @@
 using HospitalApi.Contracts.Responses.Accountant;
 using HospitalApi.Contracts.Responses.Admin;
 using HospitalApi.Contracts.Responses.Appointment;
+using HospitalApi.Contracts.Responses.Doctor;
 using HospitalApi.Contracts.Responses.Financial;
 using HospitalApi.Contracts.Responses.Patient;
 using HospitalApi.Domain;
@@ -21,5 +22,12 @@ public interface IAnonymizationService
     AccountantResponse AnonymiseAccountantData(Accountant accountant);
     AdminResponse AnonymiseAdminData(Admin admin);
     ICollection<AdminDto>? AnonymiseAdminsByMasking(ICollection<Admin>? admins);
+    GetAllAccountantsResponse AnonymiseAllAccountantsExceptCurrent(GetAllAccountantsResponse allAccountants, string username);
+    GetAllAdminsResponse AnonymiseAllAdminsExceptCurrent(GetAllAdminsResponse allAdmins, string username);
+    GetAllDoctorsResponse AnonymiseAllDoctorsExceptCurrent(GetAllDoctorsResponse allDoctors, string username);
+    MultipleAppointmentsResponse AnonymiseAppointments(MultipleAppointmentsResponse appointments);
+    GetAllDoctorsResponse AnonymiseAllDoctors(GetAllDoctorsResponse allDoctors);
+    DoctorResponse AnonymiseDoctorData(Doctor doctor);
+    GetAllPatientsResponse AnonymiseAllPatientsExceptCurrent(GetAllPatientsResponse allPatients, string username);
 }
 

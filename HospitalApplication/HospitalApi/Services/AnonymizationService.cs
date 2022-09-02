@@ -2,6 +2,7 @@
 using HospitalApi.Contracts.Responses.Accountant;
 using HospitalApi.Contracts.Responses.Admin;
 using HospitalApi.Contracts.Responses.Appointment;
+using HospitalApi.Contracts.Responses.Doctor;
 using HospitalApi.Contracts.Responses.Financial;
 using HospitalApi.Contracts.Responses.Patient;
 using HospitalApi.Domain;
@@ -139,6 +140,42 @@ public class AnonymizationService : IAnonymizationService
         return retVal;
     }
 
+    public DoctorResponse AnonymiseDoctorData(Doctor doctor)
+    {
+        Random gen = new Random();
+        var range = 45 * 365; //45 years  
+        return new DoctorResponse
+        {
+            Id = doctor.Id.Value,
+            Email = AnonymiseString(doctor.Email.Value),
+            DateOfBirth = DateTime.Today.AddDays(-gen.Next(range)).AddYears(24),
+            FirstName = AnonymiseString(doctor.FirstName.Value),
+            Surname = AnonymiseString(doctor.Surname.Value),
+            PersonalNumber = AnonymiseString(doctor.PersonalNumber.Value),
+            PhoneNumber = AnonymiseString(doctor.PhoneNumber.Value),
+            Username = doctor.Username.Value,
+            MedicalSpeciality = doctor.MedicalSpeciality.Value,
+        };
+    }
+
+    public DoctorResponse AnonymiseDoctorResponse(DoctorResponse doctor)
+    {
+        Random gen = new Random();
+        var range = 45 * 365; //45 years
+        return new DoctorResponse
+        {
+            Id = doctor.Id,
+            Email = AnonymiseString(doctor.Email),
+            DateOfBirth = DateTime.Today.AddDays(-gen.Next(range)).AddYears(24),
+            FirstName = AnonymiseString(doctor.FirstName),
+            Surname = AnonymiseString(doctor.Surname),
+            PersonalNumber = AnonymiseString(doctor.PersonalNumber),
+            PhoneNumber = AnonymiseString(doctor.PhoneNumber),
+            Username = doctor.Username,
+            MedicalSpeciality = doctor.MedicalSpeciality,
+        };
+    }
+
     public PatientResponse AnonymisePatiendData(Patient patient)
     {
         Random gen = new Random();
@@ -159,7 +196,29 @@ public class AnonymizationService : IAnonymizationService
             Gender = patient.Gender.Value,
             Height = patient.Height.Value,
             Weight = patient.Weight.Value,
+        };
+    }
 
+    public PatientResponse AnonymisePatientResponse(PatientResponse patient)
+    {
+        Random gen = new Random();
+        var range = 45 * 365; //45 years
+        return new PatientResponse
+        {
+            Id = patient.Id,
+            Email = AnonymiseString(patient.Email),
+            DateOfBirth = DateTime.Today.AddDays(-gen.Next(range)).AddYears(24),
+            FirstName = AnonymiseString(patient.FirstName),
+            Surname = AnonymiseString(patient.Surname),
+            PersonalNumber = AnonymiseString(patient.PersonalNumber),
+            PhoneNumber = AnonymiseString(patient.PhoneNumber),
+            Username = patient.Username,
+            AccountId = patient.AccountId,
+            Adress = AnonymiseString(patient.Adress),
+            BloodType = patient.BloodType,
+            Gender = patient.Gender,
+            Height = patient.Height,
+            Weight = patient.Weight,
         };
     }
 
@@ -173,18 +232,43 @@ public class AnonymizationService : IAnonymizationService
             PatientId = Guid.Parse(account.PatientId.Value.ToString()),
         };
     }
-    
+
+    public AccountResponse AnonymiseAccountResponse(AccountResponse account)
+    {
+        return new AccountResponse
+        {
+            Id = account.Id,
+            AccountNumber = AnonymiseString(account.AccountNumber),
+            Balance = account.Balance,
+            PatientId = Guid.Parse(account.PatientId.ToString()),
+        };
+    }
+
     public AppointmentResponse AnonymiseAppointmentData(Appointment appointment)
     {
         return new AppointmentResponse
         {
-            Id = Guid.Parse(appointment.Id.Value.ToString()),
+            Id = appointment.Id.Value,
             PatientId = Guid.Parse(appointment.PatientId.Value.ToString()),
             DoctorId = Guid.Parse(appointment.DoctorId.Value.ToString()),
             EndTime = appointment.EndTime.Value,
             StartTime = appointment.StartTime.Value,
             Price = appointment.Price?.Value ?? 0,
             Report = AnonymiseString(appointment.Report?.Value ?? string.Empty),
+        };
+    }
+
+    public AppointmentResponse AnonymiseAppointmentResponse(AppointmentResponse appointment)
+    {
+        return new AppointmentResponse
+        {
+            Id = appointment.Id,
+            PatientId = Guid.Parse(appointment.PatientId.ToString()),
+            DoctorId = Guid.Parse(appointment.DoctorId.ToString()),
+            EndTime = appointment.EndTime,
+            StartTime = appointment.StartTime,
+            Price = appointment.Price,
+            Report = AnonymiseString(appointment.Report ?? string.Empty),
         };
     }
 
@@ -205,6 +289,33 @@ public class AnonymizationService : IAnonymizationService
         };
     }
 
+    public MultipleAppointmentsResponse AnonymiseAppointments(MultipleAppointmentsResponse appointments)
+    {
+        var response = new MultipleAppointmentsResponse();
+        foreach (var appointment in appointments.Appointments)
+        {
+            response.Appointments.Append(AnonymiseAppointmentResponse(appointment));
+        }
+        return response;
+    }
+
+    public AccountantResponse AnonymiseAccountantResponse(AccountantResponse accountant)
+    {
+        var range = 45 * 365;
+
+        return new AccountantResponse
+        {
+            Id = accountant.Id,
+            Email = accountant.Email,
+            DateOfBirth = DateTime.Today.AddDays(-gen.Next(range)).AddYears(24),
+            FirstName = accountant.FirstName,
+            Surname = accountant.Surname,
+            PersonalNumber = AnonymiseString(accountant.PersonalNumber),
+            PhoneNumber = accountant.PhoneNumber,
+            Username = accountant.Username
+        };
+    }
+
     public AdminResponse AnonymiseAdminData(Admin admin)
     {
         var range = 45 * 365;
@@ -220,6 +331,89 @@ public class AnonymizationService : IAnonymizationService
             PhoneNumber = AnonymiseString(admin.PhoneNumber.Value),
             Username = admin.Username.Value
         };
+    }
+
+    public AdminResponse AnonymiseAdminResponse(AdminResponse admin)
+    {
+        var range = 45 * 365;
+
+        return new AdminResponse
+        {
+            Id = admin.Id,
+            Email = AnonymiseString(admin.Email),
+            DateOfBirth = DateTime.Today.AddDays(-gen.Next(range)).AddYears(24),
+            FirstName = AnonymiseString(admin.FirstName),
+            Surname = AnonymiseString(admin.Surname),
+            PersonalNumber = AnonymiseString(admin.PersonalNumber),
+            PhoneNumber = AnonymiseString(admin.PhoneNumber),
+            Username = admin.Username
+        };
+    }
+
+    public GetAllAccountantsResponse AnonymiseAllAccountantsExceptCurrent(GetAllAccountantsResponse allAccountants, string username)
+    {
+        var response = new GetAllAccountantsResponse();
+        foreach (var accountant in allAccountants.Accountants)
+        {
+            if (accountant.Username == username)
+            {
+                response.Accountants.Append(accountant);
+            }
+            response.Accountants.Append(AnonymiseAccountantResponse(accountant));
+        }
+        return response;
+    }
+
+    public GetAllAdminsResponse AnonymiseAllAdminsExceptCurrent(GetAllAdminsResponse allAdmins, string username)
+    {
+        var response = new GetAllAdminsResponse();
+        foreach (var admin in allAdmins.Admins)
+        {
+            if (admin.Username == username)
+            {
+                response.Admins.Append(admin);
+            }
+            response.Admins.Append(AnonymiseAdminResponse(admin));
+        }
+        return response;
+    }
+
+    public GetAllDoctorsResponse AnonymiseAllDoctorsExceptCurrent(GetAllDoctorsResponse allDoctors, string username)
+    {
+        var response = new GetAllDoctorsResponse();
+        foreach (var doctor in allDoctors.Doctors)
+        {
+            if (doctor.Username == username)
+            {
+                response.Doctors.Append(doctor);
+            }
+            response.Doctors.Append(AnonymiseDoctorResponse(doctor));
+        }
+        return response;
+    }
+
+    public GetAllPatientsResponse AnonymiseAllPatientsExceptCurrent(GetAllPatientsResponse allPatients, string username)
+    {
+        var response = new GetAllPatientsResponse();
+        foreach (var patient in allPatients.Patients)
+        {
+            if (patient.Username == username)
+            {
+                response.Patients.Append(patient);
+            }
+            response.Patients.Append(AnonymisePatientResponse(patient));
+        }
+        return response;
+    }
+
+    public GetAllDoctorsResponse AnonymiseAllDoctors(GetAllDoctorsResponse allDoctors)
+    {
+        var response = new GetAllDoctorsResponse();
+        foreach (var doctor in allDoctors.Doctors)
+        {
+            response.Doctors.Append(AnonymiseDoctorResponse(doctor));
+        }
+        return response;
     }
 
     private string AnonymiseString(string report)

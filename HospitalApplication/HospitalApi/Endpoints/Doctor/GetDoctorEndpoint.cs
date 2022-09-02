@@ -4,6 +4,7 @@ using HospitalApi.Contracts.Responses.Doctor;
 using HospitalApi.Mapping;
 using HospitalApi.Services.Interfaces;
 using Microsoft.AspNetCore.Authorization;
+using System.Security.Claims;
 
 namespace HospitalApi.Endpoints.Doctor;
 
@@ -11,10 +12,12 @@ namespace HospitalApi.Endpoints.Doctor;
 public class GetDoctorEndpoint : Endpoint<GetDoctorRequest, DoctorResponse>
 {
     private readonly IDoctorService _doctorService;
+    private readonly IAnonymizationService _anonymizationService;
 
-    public GetDoctorEndpoint(IDoctorService doctorService)
+    public GetDoctorEndpoint(IDoctorService doctorService, IAnonymizationService anonymizationService)
     {
         _doctorService = doctorService;
+        _anonymizationService = anonymizationService;
     }
 
     public override async Task HandleAsync(GetDoctorRequest req, CancellationToken ct)
@@ -27,8 +30,23 @@ public class GetDoctorEndpoint : Endpoint<GetDoctorRequest, DoctorResponse>
             return;
         }
 
-        var doctorResponse = doctor.ToDoctorResponse();
-        await SendOkAsync(doctorResponse, ct);
+        var context = HttpContext;
+        var username = string.Empty;
+        var role = string.Empty;
+        if (context.User != null)
+        {
+            username = context.User.FindFirstValue(ClaimTypes.Name);
+            role = context.User.FindFirstValue(ClaimTypes.Role);
+        }
+
+        if (role.Equals("DOCTOR") && doctor.Username.Equals(username))
+        {
+            await SendOkAsync(doctor.ToDoctorResponse(), ct);
+        }
+        else
+        {
+            await SendOkAsync(_anonymizationService.AnonymiseDoctorData(doctor),ct);
+        }
     }
 }
 

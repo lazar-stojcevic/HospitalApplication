@@ -3,6 +3,7 @@ using HospitalApi.Contracts.Responses.Admin;
 using HospitalApi.Mapping;
 using HospitalApi.Services.Interfaces;
 using Microsoft.AspNetCore.Authorization;
+using System.Security.Claims;
 
 namespace HospitalApi.Endpoints.Admin
 {
@@ -10,10 +11,12 @@ namespace HospitalApi.Endpoints.Admin
     public class GetAllAdminEndpoint : Endpoint<EmptyRequest, GetAllAdminsResponse>
     {
         private readonly IAdminService _adminService;
+        private readonly IAnonymizationService _anonymizationService;
 
-        public GetAllAdminEndpoint(IAdminService adminService)
+        public GetAllAdminEndpoint(IAdminService adminService, IAnonymizationService anonymizationService)
         {
             _adminService = adminService;
+            _anonymizationService = anonymizationService;
         }
 
         public override async Task HandleAsync(EmptyRequest req, CancellationToken ct)
@@ -26,8 +29,15 @@ namespace HospitalApi.Endpoints.Admin
                 return;
             }
 
+            var context = HttpContext;
+            var result = string.Empty;
+            if (context.User != null)
+            {
+                result = context.User.FindFirstValue(ClaimTypes.Name);
+            }
+
             var adminsResponse = admins.ToAdminsResponse();
-            await SendOkAsync(adminsResponse, ct);
+            await SendOkAsync(_anonymizationService.AnonymiseAllAdminsExceptCurrent(adminsResponse, result), ct);
         }
     }
 }

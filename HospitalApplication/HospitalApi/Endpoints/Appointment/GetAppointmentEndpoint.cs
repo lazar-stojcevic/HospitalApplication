@@ -4,6 +4,7 @@ using HospitalApi.Contracts.Responses.Appointment;
 using HospitalApi.Mapping;
 using HospitalApi.Services.Interfaces;
 using Microsoft.AspNetCore.Authorization;
+using System.Security.Claims;
 
 namespace HospitalApi.Endpoints.Appointment;
 
@@ -11,10 +12,14 @@ namespace HospitalApi.Endpoints.Appointment;
 public class GetAppointmentEndpoint : Endpoint<GetAppointmentRequest, AppointmentResponse>
 {
     private readonly IAppointmentService _appointmentService;
+    private readonly IAnonymizationService _anonymizationService;
+    private readonly IPatientService _patientService;
 
-    public GetAppointmentEndpoint(IAppointmentService appointmentService)
+    public GetAppointmentEndpoint(IAppointmentService appointmentService, IAnonymizationService anonymizationService, IPatientService patientService)
     {
         _appointmentService = appointmentService;
+        _anonymizationService = anonymizationService;
+        _patientService = patientService;
     }
 
     public override async Task HandleAsync(GetAppointmentRequest req, CancellationToken ct)
@@ -24,6 +29,32 @@ public class GetAppointmentEndpoint : Endpoint<GetAppointmentRequest, Appointmen
         if (appointment is null)
         {
             await SendNotFoundAsync(ct);
+            return;
+        }
+
+        var context = HttpContext;
+        var username = string.Empty;
+        var role = string.Empty;
+
+        var patient = await _patientService.GetAsync(appointment.PatientId.Value);
+        if (patient is null)
+        {
+            await SendNotFoundAsync(ct);
+            return;
+        }
+        if (context.User != null)
+        {
+            username = context.User.FindFirstValue(ClaimTypes.Name);
+            role = context.User.FindFirstValue(ClaimTypes.Role);
+        }
+        if (!patient.Username.Equals(username) && role.Equals("PATIENT"))
+        {
+            await SendUnauthorizedAsync(ct);
+            return;
+        }
+        if (role.Equals("PATIENT"))
+        {
+            await SendOkAsync(_anonymizationService.AnonymiseAppointmentData(appointment),ct);
             return;
         }
 

@@ -4,6 +4,7 @@ using HospitalApi.Contracts.Responses.Appointment;
 using HospitalApi.Mapping;
 using HospitalApi.Services.Interfaces;
 using Microsoft.AspNetCore.Authorization;
+using System.Security.Claims;
 
 namespace HospitalApi.Endpoints.Appointment;
 
@@ -25,6 +26,13 @@ public class GetDoctorsFutureAppointmets : Endpoint<GetDoctorAppointmentsRequest
         {
             await SendNotFoundAsync(ct);
             return;
+        }
+
+        var context = HttpContext;
+        var result = string.Empty;
+        if (context.User != null)
+        {
+            result = context.User.FindFirstValue(ClaimTypes.Name);
         }
 
         var appointmentsResponse = appointments.ToMultipleAppointmentResponse();

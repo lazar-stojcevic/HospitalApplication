@@ -3,6 +3,7 @@ using HospitalApi.Contracts.Responses.Patient;
 using HospitalApi.Mapping;
 using HospitalApi.Services.Interfaces;
 using Microsoft.AspNetCore.Authorization;
+using System.Security.Claims;
 
 namespace HospitalApi.Endpoints.Patient
 {
@@ -10,18 +11,16 @@ namespace HospitalApi.Endpoints.Patient
     public class GetAllPatientsEndpoint : Endpoint<EmptyRequest, GetAllPatientsResponse>
     {
         private readonly IPatientService _patientService;
+        private readonly IAnonymizationService _anonymizationService;
 
-        public GetAllPatientsEndpoint(IPatientService patientService)
+        public GetAllPatientsEndpoint(IPatientService patientService, IAnonymizationService anonymizationService)
         {
             _patientService = patientService;
+            _anonymizationService = anonymizationService;
         }
 
         public override async Task HandleAsync(EmptyRequest req, CancellationToken ct)
         {
-            /*
-            HttpContext.Request.Headers.TryGetValue("Connection", out var output);
-            Console.WriteLine(output);
-            */
             var patients = await _patientService.GetAllAsync();
 
             if (patients is null)
@@ -30,8 +29,15 @@ namespace HospitalApi.Endpoints.Patient
                 return;
             }
 
+            var context = HttpContext;
+            var result = string.Empty;
+            if (context.User != null)
+            {
+                result = context.User.FindFirstValue(ClaimTypes.Name);
+            }
+
             var patientResponse = patients.ToPatientsResponse();
-            await SendOkAsync(patientResponse, ct);
+            await SendOkAsync(_anonymizationService.AnonymiseAllPatientsExceptCurrent(patientResponse, result), ct);
         }
     }
 }

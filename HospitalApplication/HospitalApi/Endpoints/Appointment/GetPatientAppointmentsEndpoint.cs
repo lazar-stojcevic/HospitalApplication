@@ -4,6 +4,7 @@ using HospitalApi.Contracts.Responses.Appointment;
 using HospitalApi.Mapping;
 using HospitalApi.Services.Interfaces;
 using Microsoft.AspNetCore.Authorization;
+using System.Security.Claims;
 
 namespace HospitalApi.Endpoints.Appointment;
 
@@ -11,10 +12,14 @@ namespace HospitalApi.Endpoints.Appointment;
 public class GetPatientAppointmentsEndpoint : Endpoint<GetPatientAppointmentsRequest, MultipleAppointmentsResponse>
 {
     private readonly IAppointmentService _appointmentService;
+    private readonly IAnonymizationService _anonymizationService;
+    private readonly IPatientService _patientService;
 
-    public GetPatientAppointmentsEndpoint(IAppointmentService appointmentService)
+    public GetPatientAppointmentsEndpoint(IAppointmentService appointmentService, IAnonymizationService anonymizationService, IPatientService patientService)
     {
         _appointmentService = appointmentService;
+        _anonymizationService = anonymizationService;
+        _patientService = patientService;
     }
 
     public override async Task HandleAsync(GetPatientAppointmentsRequest req, CancellationToken ct)
@@ -27,7 +32,35 @@ public class GetPatientAppointmentsEndpoint : Endpoint<GetPatientAppointmentsReq
             return;
         }
 
+        var context = HttpContext;
+        var username = string.Empty;
+        var role = string.Empty;
+
+        var patient = await _patientService.GetAsync(req.Id);
+        if (patient is null)
+        {
+            await SendNotFoundAsync(ct);
+            return;
+        }
+        if (context.User != null)
+        {
+            username = context.User.FindFirstValue(ClaimTypes.Name);
+            role = context.User.FindFirstValue(ClaimTypes.Role);
+        }
+
+        if (!username.Equals(patient.Username) && role.Equals("PATIENT"))
+        {
+            await SendUnauthorizedAsync(ct);
+            return;
+        }
+
         var appointmentsResponse = appointments.ToMultipleAppointmentResponse();
+
+        if (role.Equals("ADMIN"))
+        {
+            await SendOkAsync(_anonymizationService.AnonymiseAppointments(appointmentsResponse),ct);
+            return;
+        }
         await SendOkAsync(appointmentsResponse, ct);
     }
 }
