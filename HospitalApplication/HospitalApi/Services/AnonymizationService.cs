@@ -51,15 +51,11 @@ public class AnonymizationService : IAnonymizationService
     {
         var retVal = new List<DoctorDto>();
 
-        Random gen = new Random();
-
-        var range = 45 * 365; //45 years  
-
         retVal.AddRange(doctors.Select(doctor => new DoctorDto
         {
             Id = doctor.Id.Value.ToString(),
             Email = AnonymiseString(doctor.Email.Value),
-            DateOfBirth = DateTime.Today.AddDays(-gen.Next(range)).AddYears(24),
+            DateOfBirth = doctor.DateOfBirth.Value.ToDateTime(TimeOnly.MinValue),
             FirstName = AnonymiseString(doctor.FirstName.Value),
             Surname = AnonymiseString(doctor.Surname.Value),
             MedicalSpeciality = doctor.MedicalSpeciality.Value.ToString(),
@@ -67,21 +63,18 @@ public class AnonymizationService : IAnonymizationService
             PhoneNumber = AnonymiseString(doctor.PhoneNumber.Value),
             Password = "/",
             Username = doctor.Username.Value,
-        }));
+        })); ; ;
         return retVal;
     }
 
     public ICollection<PatientDto>? AnonymisePatientsByMasking(ICollection<Patient>? patients)
     {
         var retVal = new List<PatientDto>();
-
-        var range = 45 * 365; //45 years  
-
         retVal.AddRange(patients.Select(patient => new PatientDto
         {
             Id = patient.Id.Value.ToString(),
             Email = AnonymiseString(patient.Email.Value),
-            DateOfBirth = DateTime.Today.AddDays(-gen.Next(range)).AddYears(24),
+            DateOfBirth = patient.DateOfBirth.Value.ToDateTime(TimeOnly.MinValue),
             FirstName = AnonymiseString(patient.FirstName.Value),
             Surname = AnonymiseString(patient.Surname.Value),
             PersonalNumber = AnonymiseString(patient.PersonalNumber.Value),
@@ -101,14 +94,11 @@ public class AnonymizationService : IAnonymizationService
     public ICollection<AccountantDto>? AnonymiseAccountantsByMasking(ICollection<Accountant>? accountants)
     {
         var retVal = new List<AccountantDto>();
-
-        var range = 45 * 365; //45 years  
-
         retVal.AddRange(accountants.Select(accountant => new AccountantDto
         {
             Id = accountant.Id.Value.ToString(),
             Email = AnonymiseString(accountant.Email.Value),
-            DateOfBirth = DateTime.Today.AddDays(-gen.Next(range)).AddYears(24),
+            DateOfBirth = accountant.DateOfBirth.Value.ToDateTime(TimeOnly.MinValue),
             FirstName = AnonymiseString(accountant.FirstName.Value),
             Surname = AnonymiseString(accountant.Surname.Value),
             PersonalNumber = AnonymiseString(accountant.PersonalNumber.Value),
@@ -122,14 +112,11 @@ public class AnonymizationService : IAnonymizationService
     public ICollection<AdminDto>? AnonymiseAdminsByMasking(ICollection<Admin>? admins)
     {
         var retVal = new List<AdminDto>();
-
-        var range = 45 * 365; //45 years  
-
         retVal.AddRange(admins.Select(admin => new AdminDto
         {
             Id = admin.Id.Value.ToString(),
             Email = AnonymiseString(admin.Email.Value),
-            DateOfBirth = DateTime.Today.AddDays(-gen.Next(range)).AddYears(24),
+            DateOfBirth = admin.DateOfBirth.Value.ToDateTime(TimeOnly.MinValue),
             FirstName = AnonymiseString(admin.FirstName.Value),
             Surname = AnonymiseString(admin.Surname.Value),
             PersonalNumber = AnonymiseString(admin.PersonalNumber.Value),
@@ -141,14 +128,12 @@ public class AnonymizationService : IAnonymizationService
     }
 
     public DoctorResponse AnonymiseDoctorData(Doctor doctor)
-    {
-        Random gen = new Random();
-        var range = 45 * 365; //45 years  
+    { 
         return new DoctorResponse
         {
             Id = doctor.Id.Value,
             Email = AnonymiseString(doctor.Email.Value),
-            DateOfBirth = DateTime.Today.AddDays(-gen.Next(range)).AddYears(24),
+            DateOfBirth = doctor.DateOfBirth.Value.ToDateTime(TimeOnly.MinValue),
             FirstName = AnonymiseString(doctor.FirstName.Value),
             Surname = AnonymiseString(doctor.Surname.Value),
             PersonalNumber = AnonymiseString(doctor.PersonalNumber.Value),
@@ -160,13 +145,11 @@ public class AnonymizationService : IAnonymizationService
 
     public DoctorResponse AnonymiseDoctorResponse(DoctorResponse doctor)
     {
-        Random gen = new Random();
-        var range = 45 * 365; //45 years
         return new DoctorResponse
         {
             Id = doctor.Id,
             Email = AnonymiseString(doctor.Email),
-            DateOfBirth = DateTime.Today.AddDays(-gen.Next(range)).AddYears(24),
+            DateOfBirth = doctor.DateOfBirth,
             FirstName = AnonymiseString(doctor.FirstName),
             Surname = AnonymiseString(doctor.Surname),
             PersonalNumber = AnonymiseString(doctor.PersonalNumber),
@@ -178,13 +161,11 @@ public class AnonymizationService : IAnonymizationService
 
     public PatientResponse AnonymisePatiendData(Patient patient)
     {
-        Random gen = new Random();
-        var range = 45 * 365; //45 years  
         return new PatientResponse
         {
             Id = Guid.Parse(patient.Id.Value.ToString()),
             Email = AnonymiseString(patient.Email.Value),
-            DateOfBirth = DateTime.Today.AddDays(-gen.Next(range)).AddYears(24),
+            DateOfBirth = patient.DateOfBirth.Value.ToDateTime(TimeOnly.MinValue),
             FirstName = AnonymiseString(patient.FirstName.Value),
             Surname = AnonymiseString(patient.Surname.Value),
             PersonalNumber = AnonymiseString(patient.PersonalNumber.Value),
@@ -201,13 +182,11 @@ public class AnonymizationService : IAnonymizationService
 
     public PatientResponse AnonymisePatientResponse(PatientResponse patient)
     {
-        Random gen = new Random();
-        var range = 45 * 365; //45 years
         return new PatientResponse
         {
             Id = patient.Id,
             Email = AnonymiseString(patient.Email),
-            DateOfBirth = DateTime.Today.AddDays(-gen.Next(range)).AddYears(24),
+            DateOfBirth = patient.DateOfBirth,
             FirstName = AnonymiseString(patient.FirstName),
             Surname = AnonymiseString(patient.Surname),
             PersonalNumber = AnonymiseString(patient.PersonalNumber),
@@ -274,13 +253,11 @@ public class AnonymizationService : IAnonymizationService
 
     public AccountantResponse AnonymiseAccountantData(Accountant accountant)
     {
-        var range = 45 * 365;
-
         return new AccountantResponse
         {
             Id = accountant.Id.Value,
             Email = AnonymiseString(accountant.Email.Value),
-            DateOfBirth = DateTime.Today.AddDays(-gen.Next(range)).AddYears(24),
+            DateOfBirth = accountant.DateOfBirth.Value.ToDateTime(TimeOnly.MinValue),
             FirstName = AnonymiseString(accountant.FirstName.Value),
             Surname = AnonymiseString(accountant.Surname.Value),
             PersonalNumber = AnonymiseString(accountant.PersonalNumber.Value),
@@ -301,13 +278,11 @@ public class AnonymizationService : IAnonymizationService
 
     public AccountantResponse AnonymiseAccountantResponse(AccountantResponse accountant)
     {
-        var range = 45 * 365;
-
         return new AccountantResponse
         {
             Id = accountant.Id,
             Email = accountant.Email,
-            DateOfBirth = DateTime.Today.AddDays(-gen.Next(range)).AddYears(24),
+            DateOfBirth = accountant.DateOfBirth,
             FirstName = accountant.FirstName,
             Surname = accountant.Surname,
             PersonalNumber = AnonymiseString(accountant.PersonalNumber),
@@ -318,13 +293,11 @@ public class AnonymizationService : IAnonymizationService
 
     public AdminResponse AnonymiseAdminData(Admin admin)
     {
-        var range = 45 * 365;
-
         return new AdminResponse
         {
             Id = admin.Id.Value,
             Email = AnonymiseString(admin.Email.Value),
-            DateOfBirth = DateTime.Today.AddDays(-gen.Next(range)).AddYears(24),
+            DateOfBirth = admin.DateOfBirth.Value.ToDateTime(TimeOnly.MinValue),
             FirstName = AnonymiseString(admin.FirstName.Value),
             Surname = AnonymiseString(admin.Surname.Value),
             PersonalNumber = AnonymiseString(admin.PersonalNumber.Value),
@@ -335,13 +308,11 @@ public class AnonymizationService : IAnonymizationService
 
     public AdminResponse AnonymiseAdminResponse(AdminResponse admin)
     {
-        var range = 45 * 365;
-
         return new AdminResponse
         {
             Id = admin.Id,
             Email = AnonymiseString(admin.Email),
-            DateOfBirth = DateTime.Today.AddDays(-gen.Next(range)).AddYears(24),
+            DateOfBirth = admin.DateOfBirth,
             FirstName = AnonymiseString(admin.FirstName),
             Surname = AnonymiseString(admin.Surname),
             PersonalNumber = AnonymiseString(admin.PersonalNumber),
