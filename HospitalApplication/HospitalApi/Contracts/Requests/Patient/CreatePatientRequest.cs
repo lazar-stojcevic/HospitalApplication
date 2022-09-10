@@ -14,6 +14,5 @@ public class CreatePatientRequest
     public string PhoneNumber { get; init; } = default!;
     public string Email { get; init; } = default!;
     public string Password { get; init; } = default!;
-
     public DateTime DateOfBirth { get; init; }
 }

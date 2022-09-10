@@ -9,9 +9,6 @@ using HospitalApi.Repositories.Interfaces;
 using HospitalApi.Services;
 using HospitalApi.Services.Interfaces;
 using HospitalApi.Validation;
-using Microsoft.AspNetCore.Authentication.JwtBearer;
-using Microsoft.IdentityModel.Tokens;
-using System.Text;
 
 var builder = WebApplication.CreateBuilder(args);
 var config = builder.Configuration;
@@ -46,6 +43,12 @@ builder.Services.AddSingleton<IAnonymizationService, AnonymizationService>();
 builder.Services.AddSingleton<IAccountantService, AccountantService>();
 builder.Services.AddSingleton<IAdminService, AdminService>();
 
+builder.Services.AddCors(o => o.AddDefaultPolicy(b => b
+                                                        .SetIsOriginAllowed(origin => new Uri(origin).Host == "localhost")
+                                                            .AllowAnyHeader()
+                                                                .AllowAnyMethod()
+));
+
 builder.Services.AddAuthenticationJWTBearer(builder.Configuration.GetSection("Secret:Token").Value);
 
 var app = builder.Build();
@@ -58,6 +61,10 @@ app.UseSwaggerUi3(s => s.ConfigureDefaults());
 app.UseAuthentication();
 
 app.UseAuthorization();
+
+app.UseRouting();
+
+app.UseCors();
 
 app.UseFastEndpoints(x =>
 {
