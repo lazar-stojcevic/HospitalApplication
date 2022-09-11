@@ -1,4 +1,5 @@
 ﻿using HospitalApi.Contracts.Data;
+using HospitalApi.Contracts.Responses.Login;
 using HospitalApi.Domain.Types;
 using HospitalApi.Repositories.Interfaces;
 using HospitalApi.Services.Interfaces;
@@ -24,36 +25,36 @@ public class AuthenticationService : IAuthenticationService
         _accountantRepository = accountantRepository;
         _adminRepository = adminRepository;
     }
-    public async Task<string> AuthenticateUser(LoginDto login)
+    public async Task<LoginResponse> AuthenticateUser(LoginDto login)
     {
         var doctor = await _doctorRepository.GetByUsername(login.Username);
 
         if (doctor != null && BCrypt.Net.BCrypt.Verify(login.Password, doctor.Password))
         {
-            return GenerateJwtForDoctor(doctor);
+            return new LoginResponse { Token = GenerateJwtForDoctor(doctor), Role = "DOCTOR" };
         }
 
         var patient = await _patientRepository.GetByUsername(login.Username);
 
         if (patient != null && BCrypt.Net.BCrypt.Verify(login.Password, patient.Password))
         {
-            return GenerateJwtForPatient(patient);
+            return new LoginResponse { Token = GenerateJwtForPatient(patient), Role = "PATIENT" };
         }
 
         var accountant = await _accountantRepository.GetByUsername(login.Username);
 
         if (accountant != null && BCrypt.Net.BCrypt.Verify(login.Password, accountant.Password))
         {
-            return GenerateJwtForAccountant(accountant);
+            return new LoginResponse { Token = GenerateJwtForAccountant(accountant), Role = "ACCOUNTANT" };
         }
 
         var admin = await _adminRepository.GetByUsername(login.Username);
 
         if (admin != null && BCrypt.Net.BCrypt.Verify(login.Password, admin.Password))
         {
-            return GenerateJwtForAdmin(admin);
+            return new LoginResponse { Token = GenerateJwtForAdmin(admin), Role = "ADMIN" };
         }
-        return string.Empty;
+        return new LoginResponse { Token = "", Role = "" };
     }
 
     public string HashPassword(string password)

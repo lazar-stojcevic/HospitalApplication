@@ -23,18 +23,12 @@ public class LoginEndpoint : Endpoint<LoginRequest, LoginResponse>
 
     public override async Task HandleAsync(LoginRequest req, CancellationToken ct)
     {
-        var jwt = await _authenticationService.AuthenticateUser(new LoginDto{ 
+        var response = await _authenticationService.AuthenticateUser(new LoginDto{ 
             Username = req.Username,
             Password = req.Password
         });
 
-        if (jwt is null)
-        {
-            await SendUnauthorizedAsync(ct);
-            return;
-        }
-
-        await SendOkAsync(new LoginResponse { Token = jwt }, ct);
+        await SendOkAsync(response);
     }
 }
 
