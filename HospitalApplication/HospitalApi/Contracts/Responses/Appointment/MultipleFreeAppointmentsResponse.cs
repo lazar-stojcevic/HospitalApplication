@@ -2,6 +2,6 @@
 {
     public class MultipleFreeAppointmentsResponse
     {
-        public IEnumerable<FreeAppointmentResponse> FreeAppointments { get; init; } = Enumerable.Empty<FreeAppointmentResponse>();
+        public ICollection<FreeAppointmentResponse> FreeAppointments { get; init; } = new List<FreeAppointmentResponse>();
     }
 }

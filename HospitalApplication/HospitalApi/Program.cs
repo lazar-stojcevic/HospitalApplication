@@ -16,6 +16,7 @@ var config = builder.Configuration;
 builder.Services.AddAWSLambdaHosting(LambdaEventSource.HttpApi);
 
 builder.Services.AddFastEndpoints();
+builder.Services.AddAuthenticationJWTBearer(builder.Configuration.GetSection("Secret:Token").Value);
 builder.Services.AddSwaggerDoc();
 builder.Services.AddHttpContextAccessor();
 
@@ -49,8 +50,6 @@ builder.Services.AddCors(o => o.AddDefaultPolicy(b => b
                                                                 .AllowAnyMethod()
 ));
 
-builder.Services.AddAuthenticationJWTBearer(builder.Configuration.GetSection("Secret:Token").Value);
-
 var app = builder.Build();
 
 app.UseMiddleware<ValidationExceptionMiddleware>();
@@ -59,16 +58,13 @@ app.UseOpenApi();
 app.UseSwaggerUi3(s => s.ConfigureDefaults());
 
 app.UseAuthentication();
-
-app.UseAuthorization();
-
+app.UseCors(opt => opt.AllowAnyHeader().AllowAnyMethod().SetIsOriginAllowed(origin => new Uri(origin).Host == "localhost"));
 app.UseRouting();
-
-app.UseCors();
+app.UseAuthorization();
 
 app.UseFastEndpoints(x =>
 {
-    x.ErrorResponseBuilder = (failures, _) =>
+    x.Errors.ResponseBuilder = (failures, _) =>
     {
         return new ValidationFailureResponse
         {

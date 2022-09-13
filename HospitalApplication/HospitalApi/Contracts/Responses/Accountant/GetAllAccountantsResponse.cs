@@ -2,6 +2,6 @@
 
 public class GetAllAccountantsResponse
 {
-    public IEnumerable<AccountantResponse> Accountants { get; init; } = Enumerable.Empty<AccountantResponse>();
+    public ICollection<AccountantResponse> Accountants { get; init; } = new List<AccountantResponse>();
 }
 

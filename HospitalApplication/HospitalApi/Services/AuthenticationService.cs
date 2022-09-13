@@ -1,11 +1,9 @@
-﻿using HospitalApi.Contracts.Data;
+﻿using FastEndpoints.Security;
+using HospitalApi.Contracts.Data;
 using HospitalApi.Contracts.Responses.Login;
 using HospitalApi.Domain.Types;
 using HospitalApi.Repositories.Interfaces;
 using HospitalApi.Services.Interfaces;
-using Microsoft.IdentityModel.Tokens;
-using System.IdentityModel.Tokens.Jwt;
-using System.Security.Claims;
 
 namespace HospitalApi.Services;
 
@@ -31,28 +29,28 @@ public class AuthenticationService : IAuthenticationService
 
         if (doctor != null && BCrypt.Net.BCrypt.Verify(login.Password, doctor.Password))
         {
-            return new LoginResponse { Token = GenerateJwtForDoctor(doctor), Role = "DOCTOR" };
+            return new LoginResponse { Token = GenerateJwtForDoctor(doctor), Role = "DOCTOR", UserId = Guid.Parse(doctor.Id) };
         }
 
         var patient = await _patientRepository.GetByUsername(login.Username);
 
         if (patient != null && BCrypt.Net.BCrypt.Verify(login.Password, patient.Password))
         {
-            return new LoginResponse { Token = GenerateJwtForPatient(patient), Role = "PATIENT" };
+            return new LoginResponse { Token = GenerateJwtForPatient(patient), Role = "PATIENT", UserId = Guid.Parse(patient.Id) };
         }
 
         var accountant = await _accountantRepository.GetByUsername(login.Username);
 
         if (accountant != null && BCrypt.Net.BCrypt.Verify(login.Password, accountant.Password))
         {
-            return new LoginResponse { Token = GenerateJwtForAccountant(accountant), Role = "ACCOUNTANT" };
+            return new LoginResponse { Token = GenerateJwtForAccountant(accountant), Role = "ACCOUNTANT", UserId = Guid.Parse(accountant.Id) };
         }
 
         var admin = await _adminRepository.GetByUsername(login.Username);
 
         if (admin != null && BCrypt.Net.BCrypt.Verify(login.Password, admin.Password))
         {
-            return new LoginResponse { Token = GenerateJwtForAdmin(admin), Role = "ADMIN" };
+            return new LoginResponse { Token = GenerateJwtForAdmin(admin), Role = "ADMIN", UserId = Guid.Parse(admin.Id) };
         }
         return new LoginResponse { Token = "", Role = "" };
     }
@@ -64,94 +62,46 @@ public class AuthenticationService : IAuthenticationService
 
     private string GenerateJwtForDoctor(DoctorDto doctor)
     {
-        List<Claim> claims = new List<Claim>
-        {
-            new Claim(ClaimTypes.Name, doctor.Username),
-            new Claim(ClaimTypes.Role, "DOCTOR")
-        };
+        var jwtToken = JWTBearer.CreateToken(
+                signingKey: _configuration.GetSection("Secret:Token").Value,
+                expireAt: DateTime.UtcNow.AddDays(1),
+                roles: new[] { "DOCTOR" },
+                claims: new[] { ("Username", doctor.Username) });
 
-        var key = new SymmetricSecurityKey(System.Text.Encoding.UTF8.GetBytes(_configuration.GetSection("Secret:Token").Value));
-
-        var cred = new SigningCredentials(key, SecurityAlgorithms.HmacSha512Signature);
-
-        var token = new JwtSecurityToken(
-            claims: claims,
-            expires: DateTime.UtcNow.AddMinutes(60),
-            signingCredentials: cred
-        );
-
-        var jwt = new JwtSecurityTokenHandler().WriteToken(token);
-
-        return jwt;
+        return jwtToken;
     }
 
     private string GenerateJwtForPatient(PatientDto patient)
     {
-        List<Claim> claims = new List<Claim>
-        {
-            new Claim(ClaimTypes.Name, patient.Username),
-            new Claim(ClaimTypes.Role, "PATIENT")
-        };
+        var jwtToken = JWTBearer.CreateToken(
+                signingKey: _configuration.GetSection("Secret:Token").Value,
+                expireAt: DateTime.UtcNow.AddDays(1),
+                roles: new[] { "PATIENT" },
+                claims: new[] { ("Username", patient.Username) });
 
-        var key = new SymmetricSecurityKey(System.Text.Encoding.UTF8.GetBytes(_configuration.GetSection("Secret:Token").Value));
-
-        var cred = new SigningCredentials(key, SecurityAlgorithms.HmacSha512Signature);
-
-        var token = new JwtSecurityToken(
-            claims: claims,
-            expires: DateTime.UtcNow.AddMinutes(60),
-            signingCredentials: cred
-        );
-
-        var jwt = new JwtSecurityTokenHandler().WriteToken(token);
-
-        return jwt;
+        return jwtToken;
     }
 
     private string GenerateJwtForAccountant(AccountantDto accountant)
     {
-        List<Claim> claims = new List<Claim>
-        {
-            new Claim(ClaimTypes.Name, accountant.Username),
-            new Claim(ClaimTypes.Role, "ACCOUNTANT")
-        };
+        var jwtToken = JWTBearer.CreateToken(
+                signingKey: _configuration.GetSection("Secret:Token").Value,
+                expireAt: DateTime.UtcNow.AddDays(1),
+                roles: new[] { "ACCOUNTANT" },
+                claims: new[] { ("Username", accountant.Username) });
 
-        var key = new SymmetricSecurityKey(System.Text.Encoding.UTF8.GetBytes(_configuration.GetSection("Secret:Token").Value));
-
-        var cred = new SigningCredentials(key, SecurityAlgorithms.HmacSha512Signature);
-
-        var token = new JwtSecurityToken(
-            claims: claims,
-            expires: DateTime.UtcNow.AddMinutes(60),
-            signingCredentials: cred
-        );
-
-        var jwt = new JwtSecurityTokenHandler().WriteToken(token);
-
-        return jwt;
+        return jwtToken;
     }
 
     private string GenerateJwtForAdmin(AdminDto admin)
     {
-        List<Claim> claims = new List<Claim>
-        {
-            new Claim(ClaimTypes.Name, admin.Username),
-            new Claim(ClaimTypes.Role, "ADMIN")
-        };
+        var jwtToken = JWTBearer.CreateToken(
+                signingKey: _configuration.GetSection("Secret:Token").Value,
+                expireAt: DateTime.UtcNow.AddDays(1),
+                roles: new[] { "ADMIN" },
+                claims: new[] { ("Username", admin.Username) });
 
-        var key = new SymmetricSecurityKey(System.Text.Encoding.UTF8.GetBytes(_configuration.GetSection("Secret:Token").Value));
-
-        var cred = new SigningCredentials(key, SecurityAlgorithms.HmacSha512Signature);
-
-        var token = new JwtSecurityToken(
-            claims: claims,
-            expires: DateTime.UtcNow.AddMinutes(60),
-            signingCredentials: cred
-        );
-
-        var jwt = new JwtSecurityTokenHandler().WriteToken(token);
-
-        return jwt;
+        return jwtToken;
     }
 
     public async Task<bool> IsUsernameUnique(string username, UserType userType)

@@ -42,7 +42,7 @@ public static class DomainToApiContractMapper
         };
     }
 
-    public static GetAllPatientsResponse ToPatientsResponse(this IEnumerable<Patient> patients)
+    public static GetAllPatientsResponse ToPatientsResponse(this ICollection<Patient> patients)
     {
         return new GetAllPatientsResponse
         {
@@ -62,7 +62,7 @@ public static class DomainToApiContractMapper
                 PhoneNumber = x.PhoneNumber.Value,
                 DateOfBirth = x.DateOfBirth.Value.ToDateTime(TimeOnly.MinValue),
                 AccountId = x.AccountId.Value,
-            })
+            }).ToList()
         };
     }
 
@@ -76,7 +76,7 @@ public static class DomainToApiContractMapper
                 AccountNumber = account.AccountNumber.Value,
                 Balance = account.Balance.Value,
                 PatientId = account.PatientId.Value,
-            })
+            }).ToList()
         };
     }
 
@@ -111,7 +111,7 @@ public static class DomainToApiContractMapper
                 PhoneNumber = doctor.PhoneNumber.Value,
                 DateOfBirth = doctor.DateOfBirth.Value.ToDateTime(TimeOnly.MinValue),
                 MedicalSpeciality = doctor.MedicalSpeciality.Value,
-            })
+            }).ToList()
         };
     }
 
@@ -144,7 +144,7 @@ public static class DomainToApiContractMapper
                 PersonalNumber = accountant.PersonalNumber.Value,
                 PhoneNumber = accountant.PhoneNumber.Value,
                 DateOfBirth = accountant.DateOfBirth.Value.ToDateTime(TimeOnly.MinValue)
-            })
+            }).ToList()
         };
     }
 
@@ -175,7 +175,7 @@ public static class DomainToApiContractMapper
                 StartTime = appointment.StartTime.Value,
                 Report = appointment.Report?.Value ?? string.Empty,
                 Price = appointment.Price?.Value ?? 0
-            })
+            }).ToList(),
         };
     }
 
@@ -208,7 +208,7 @@ public static class DomainToApiContractMapper
                 PersonalNumber = admin.PersonalNumber.Value,
                 PhoneNumber = admin.PhoneNumber.Value,
                 DateOfBirth = admin.DateOfBirth.Value.ToDateTime(TimeOnly.MinValue)
-            })
+            }).ToList(),
         };
     }
 }

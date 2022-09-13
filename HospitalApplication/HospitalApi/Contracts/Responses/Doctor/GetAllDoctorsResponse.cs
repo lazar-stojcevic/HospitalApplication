@@ -2,6 +2,6 @@
 
 public class GetAllDoctorsResponse
 {
-    public IEnumerable<DoctorResponse> Doctors { get; init; } = Enumerable.Empty<DoctorResponse>();
+    public ICollection<DoctorResponse> Doctors { get; init; } = new List<DoctorResponse>();
 }
 

@@ -2,6 +2,6 @@
 
 public class MultipleAppointmentsResponse
 {
-    public IEnumerable<AppointmentResponse> Appointments { get; init; } = Enumerable.Empty<AppointmentResponse>();
+    public ICollection<AppointmentResponse> Appointments { get; init; } = new List<AppointmentResponse>();
 }
 

@@ -7,10 +7,17 @@ using Microsoft.AspNetCore.Authorization;
 using System.Security.Claims;
 
 namespace HospitalApi.Endpoints.Appointment;
-
-[HttpGet("appointments/patient/{id:guid}"), Authorize(Roles = "ADMIN,PATIENT,DOCTOR")]
+[HttpGet("appointments/patient/{id:guid}"), Authorize]
 public class GetPatientAppointmentsEndpoint : Endpoint<GetPatientAppointmentsRequest, MultipleAppointmentsResponse>
 {
+    /*
+    public override void Configure()
+    {
+        Get("appointments/patient/{id:guid}");
+        AllowAnonymous();
+    }
+    */
+
     private readonly IAppointmentService _appointmentService;
     private readonly IAnonymizationService _anonymizationService;
     private readonly IPatientService _patientService;
@@ -44,11 +51,11 @@ public class GetPatientAppointmentsEndpoint : Endpoint<GetPatientAppointmentsReq
         }
         if (context.User != null)
         {
-            username = context.User.FindFirstValue(ClaimTypes.Name);
+            username = context.User.FindFirstValue("Username"); ;
             role = context.User.FindFirstValue(ClaimTypes.Role);
         }
 
-        if (!username.Equals(patient.Username) && role.Equals("PATIENT"))
+        if (!username.Equals(patient.Username.Value) && role.Equals("PATIENT"))
         {
             await SendUnauthorizedAsync(ct);
             return;

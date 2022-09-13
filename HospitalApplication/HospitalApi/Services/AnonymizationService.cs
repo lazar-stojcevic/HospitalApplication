@@ -12,13 +12,12 @@ using System.Text.RegularExpressions;
 namespace HospitalApi.Services;
 public class AnonymizationService : IAnonymizationService
 {
-
     public static Random gen = new Random();
     public ICollection<AccountDto>? AnonymiseAccountsByMasking(ICollection<Account>? accounts)
     {
         var retVal = new List<AccountDto>();
 
-        retVal.AddRange(accounts.Select(account => new AccountDto
+        retVal.AddRange(accounts!.Select(account => new AccountDto
         {
             Id = account.Id.Value.ToString(),
             AccountNumber = AnonymiseString(account.AccountNumber.Value),
@@ -33,7 +32,7 @@ public class AnonymizationService : IAnonymizationService
     {
         var retVal = new List<AppointmentDto>();
 
-        retVal.AddRange(appointments.Select(appointment => new AppointmentDto
+        retVal.AddRange(appointments!.Select(appointment => new AppointmentDto
         {
             Id = appointment.Id.Value.ToString(),
             PatientId = appointment.PatientId.Value.ToString(),
@@ -51,7 +50,7 @@ public class AnonymizationService : IAnonymizationService
     {
         var retVal = new List<DoctorDto>();
 
-        retVal.AddRange(doctors.Select(doctor => new DoctorDto
+        retVal.AddRange(doctors!.Select(doctor => new DoctorDto
         {
             Id = doctor.Id.Value.ToString(),
             Email = AnonymiseString(doctor.Email.Value),
@@ -70,7 +69,7 @@ public class AnonymizationService : IAnonymizationService
     public ICollection<PatientDto>? AnonymisePatientsByMasking(ICollection<Patient>? patients)
     {
         var retVal = new List<PatientDto>();
-        retVal.AddRange(patients.Select(patient => new PatientDto
+        retVal.AddRange(patients!.Select(patient => new PatientDto
         {
             Id = patient.Id.Value.ToString(),
             Email = AnonymiseString(patient.Email.Value),
@@ -94,7 +93,7 @@ public class AnonymizationService : IAnonymizationService
     public ICollection<AccountantDto>? AnonymiseAccountantsByMasking(ICollection<Accountant>? accountants)
     {
         var retVal = new List<AccountantDto>();
-        retVal.AddRange(accountants.Select(accountant => new AccountantDto
+        retVal.AddRange(accountants!.Select(accountant => new AccountantDto
         {
             Id = accountant.Id.Value.ToString(),
             Email = AnonymiseString(accountant.Email.Value),
@@ -112,7 +111,7 @@ public class AnonymizationService : IAnonymizationService
     public ICollection<AdminDto>? AnonymiseAdminsByMasking(ICollection<Admin>? admins)
     {
         var retVal = new List<AdminDto>();
-        retVal.AddRange(admins.Select(admin => new AdminDto
+        retVal.AddRange(admins!.Select(admin => new AdminDto
         {
             Id = admin.Id.Value.ToString(),
             Email = AnonymiseString(admin.Email.Value),
@@ -271,7 +270,7 @@ public class AnonymizationService : IAnonymizationService
         var response = new MultipleAppointmentsResponse();
         foreach (var appointment in appointments.Appointments)
         {
-            response.Appointments.Append(AnonymiseAppointmentResponse(appointment));
+            response.Appointments.Add(AnonymiseAppointmentResponse(appointment));
         }
         return response;
     }
@@ -328,9 +327,9 @@ public class AnonymizationService : IAnonymizationService
         {
             if (accountant.Username == username)
             {
-                response.Accountants.Append(accountant);
+                response.Accountants.Add(accountant);
             }
-            response.Accountants.Append(AnonymiseAccountantResponse(accountant));
+            response.Accountants.Add(AnonymiseAccountantResponse(accountant));
         }
         return response;
     }
@@ -342,9 +341,9 @@ public class AnonymizationService : IAnonymizationService
         {
             if (admin.Username == username)
             {
-                response.Admins.Append(admin);
+                response.Admins.Add(admin);
             }
-            response.Admins.Append(AnonymiseAdminResponse(admin));
+            response.Admins.Add(AnonymiseAdminResponse(admin));
         }
         return response;
     }
@@ -356,9 +355,9 @@ public class AnonymizationService : IAnonymizationService
         {
             if (doctor.Username == username)
             {
-                response.Doctors.Append(doctor);
+                response.Doctors.Add(doctor);
             }
-            response.Doctors.Append(AnonymiseDoctorResponse(doctor));
+            response.Doctors.Add(AnonymiseDoctorResponse(doctor));
         }
         return response;
     }
@@ -370,9 +369,9 @@ public class AnonymizationService : IAnonymizationService
         {
             if (patient.Username == username)
             {
-                response.Patients.Append(patient);
+                response.Patients.Add(patient);
             }
-            response.Patients.Append(AnonymisePatientResponse(patient));
+            response.Patients.Add(AnonymisePatientResponse(patient));
         }
         return response;
     }
@@ -382,7 +381,7 @@ public class AnonymizationService : IAnonymizationService
         var response = new GetAllDoctorsResponse();
         foreach (var doctor in allDoctors.Doctors)
         {
-            response.Doctors.Append(AnonymiseDoctorResponse(doctor));
+            response.Doctors.Add(AnonymiseDoctorResponse(doctor));
         }
         return response;
     }

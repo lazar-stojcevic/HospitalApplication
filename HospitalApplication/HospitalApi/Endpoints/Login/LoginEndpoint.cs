@@ -10,14 +10,10 @@ namespace HospitalApi.Endpoints.Login;
 [HttpPost("login"), AllowAnonymous]
 public class LoginEndpoint : Endpoint<LoginRequest, LoginResponse>
 {
-    private readonly IDoctorService _doctorService;
-    private readonly IPatientService _patientService;
     private readonly IAuthenticationService _authenticationService;
 
-    public LoginEndpoint(IDoctorService doctorService, IPatientService patientService, IAuthenticationService authenticationService)
+    public LoginEndpoint(IAuthenticationService authenticationService)
     {
-        _doctorService = doctorService;
-        _patientService = patientService;
         _authenticationService = authenticationService;
     }
 
@@ -28,7 +24,7 @@ public class LoginEndpoint : Endpoint<LoginRequest, LoginResponse>
             Password = req.Password
         });
 
-        await SendOkAsync(response);
+        await SendOkAsync(response, ct);
     }
 }
 

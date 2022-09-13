@@ -2,6 +2,6 @@
 
 public class GetAllAdminsResponse
 {
-    public IEnumerable<AdminResponse> Admins { get; init; } = Enumerable.Empty<AdminResponse>();
+    public ICollection<AdminResponse> Admins { get; init; } = new List<AdminResponse>();
 }
 
