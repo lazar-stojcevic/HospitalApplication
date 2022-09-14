@@ -14,12 +14,14 @@ public class GetAppointmentEndpoint : Endpoint<GetAppointmentRequest, Appointmen
     private readonly IAppointmentService _appointmentService;
     private readonly IAnonymizationService _anonymizationService;
     private readonly IPatientService _patientService;
+    private readonly IDoctorService _doctorService;
 
-    public GetAppointmentEndpoint(IAppointmentService appointmentService, IAnonymizationService anonymizationService, IPatientService patientService)
+    public GetAppointmentEndpoint(IAppointmentService appointmentService, IAnonymizationService anonymizationService, IPatientService patientService, IDoctorService doctorService)
     {
         _appointmentService = appointmentService;
         _anonymizationService = anonymizationService;
         _patientService = patientService;
+        _doctorService = doctorService;
     }
 
     public override async Task HandleAsync(GetAppointmentRequest req, CancellationToken ct)
@@ -52,13 +54,18 @@ public class GetAppointmentEndpoint : Endpoint<GetAppointmentRequest, Appointmen
             await SendUnauthorizedAsync(ct);
             return;
         }
-        if (role.Equals("PATIENT"))
-        {
-            await SendOkAsync(_anonymizationService.AnonymiseAppointmentData(appointment),ct);
-            return;
-        }
 
         var appointmentResponse = appointment.ToAppointmentResponse();
+
+        var doctor = await _doctorService.GetAsync(appointment.DoctorId.Value);
+        appointmentResponse.DoctorName = $"{ doctor.FirstName} { doctor.Surname}";
+        appointmentResponse.DoctorName = doctor.MedicalSpeciality.Value;
+
+        if (role.Equals("ADMIN"))
+        {
+            await SendOkAsync(_anonymizationService.AnonymiseAppointmentData(appointmentResponse),ct);
+            return;
+        }
         await SendOkAsync(appointmentResponse, ct);
     }
 }

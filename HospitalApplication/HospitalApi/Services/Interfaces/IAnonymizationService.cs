@@ -18,7 +18,7 @@ public interface IAnonymizationService
     ICollection<AccountantDto>? AnonymiseAccountantsByMasking(ICollection<Accountant>? accountants);
     PatientResponse AnonymisePatiendData(Patient patient);
     AccountResponse AnonymiseAccountData(Account account);
-    AppointmentResponse AnonymiseAppointmentData(Appointment appointment);
+    AppointmentResponse AnonymiseAppointmentData(AppointmentResponse appointment);
     AccountantResponse AnonymiseAccountantData(Accountant accountant);
     AdminResponse AnonymiseAdminData(Admin admin);
     ICollection<AdminDto>? AnonymiseAdminsByMasking(ICollection<Admin>? admins);

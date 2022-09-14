@@ -222,17 +222,19 @@ public class AnonymizationService : IAnonymizationService
         };
     }
 
-    public AppointmentResponse AnonymiseAppointmentData(Appointment appointment)
+    public AppointmentResponse AnonymiseAppointmentData(AppointmentResponse appointment)
     {
         return new AppointmentResponse
         {
-            Id = appointment.Id.Value,
-            PatientId = Guid.Parse(appointment.PatientId.Value.ToString()),
-            DoctorId = Guid.Parse(appointment.DoctorId.Value.ToString()),
-            EndTime = appointment.EndTime.Value,
-            StartTime = appointment.StartTime.Value,
-            Price = appointment.Price?.Value ?? 0,
-            Report = AnonymiseString(appointment.Report?.Value ?? string.Empty),
+            Id = appointment.Id,
+            PatientId = appointment.PatientId,
+            DoctorId = appointment.DoctorId,
+            EndTime = appointment.EndTime,
+            StartTime = appointment.StartTime,
+            Price = appointment.Price,
+            Report = AnonymiseString(appointment.Report ?? string.Empty),
+            DoctorSpeciality = appointment.DoctorSpeciality,
+            DoctorName = appointment.DoctorName,
         };
     }
 
@@ -247,6 +249,9 @@ public class AnonymizationService : IAnonymizationService
             StartTime = appointment.StartTime,
             Price = appointment.Price,
             Report = AnonymiseString(appointment.Report ?? string.Empty),
+            DoctorName = AnonymiseString(appointment.DoctorName),
+            DoctorSpeciality = appointment.DoctorSpeciality,
+            PatientName = AnonymiseString(appointment.PatientName),
         };
     }
 

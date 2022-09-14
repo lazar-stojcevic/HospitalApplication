@@ -12,10 +12,14 @@ namespace HospitalApi.Endpoints.Appointment;
 public class GetDoctorsFutureAppointmets : Endpoint<GetDoctorAppointmentsRequest, MultipleAppointmentsResponse>
 {
     private readonly IAppointmentService _appointmentService;
+    private readonly IPatientService _patientService;
+    private readonly IAnonymizationService _anonymizationService;
 
-    public GetDoctorsFutureAppointmets(IAppointmentService appointmentService)
+    public GetDoctorsFutureAppointmets(IAppointmentService appointmentService, IPatientService patientService, IAnonymizationService anonymizationService)
     {
         _appointmentService = appointmentService;
+        _patientService = patientService;
+        _anonymizationService = anonymizationService;
     }
 
     public override async Task HandleAsync(GetDoctorAppointmentsRequest req, CancellationToken ct)
@@ -29,13 +33,27 @@ public class GetDoctorsFutureAppointmets : Endpoint<GetDoctorAppointmentsRequest
         }
 
         var context = HttpContext;
-        var result = string.Empty;
+        var role = string.Empty;
         if (context.User != null)
         {
-            result = context.User.FindFirstValue(ClaimTypes.Name);
+            role = context.User.FindFirstValue(ClaimTypes.Role);
         }
 
+        var patients = await _patientService.GetAllAsync();
+
         var appointmentsResponse = appointments.ToMultipleAppointmentResponse();
+
+        foreach(var appointment in appointmentsResponse.Appointments)
+        {
+            var patient = patients.First(x => x.Id.Value == appointment.PatientId);
+            appointment.PatientName = $"{patient.FirstName} {patient.Surname}";
+        }
+
+        if (role.Equals("ADMIN"))
+        {
+            appointmentsResponse = _anonymizationService.AnonymiseAppointments(appointmentsResponse);
+        }
+
         await SendOkAsync(appointmentsResponse, ct);
     }
 }
