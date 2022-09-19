@@ -258,6 +258,10 @@ public class AppointmentRepository : IAppointmentRepository
         {
             var docItem = Document.FromAttributeMap(item);
             var itemJson = JsonSerializer.Deserialize<AppointmentDto>(docItem.ToJson());
+            if (itemJson.Report != null)
+            {
+                continue;
+            }
             if (itemJson != null)
             {
                 retVal.Add(itemJson);

@@ -59,7 +59,8 @@ public class GetAppointmentEndpoint : Endpoint<GetAppointmentRequest, Appointmen
 
         var doctor = await _doctorService.GetAsync(appointment.DoctorId.Value);
         appointmentResponse.DoctorName = $"{ doctor.FirstName} { doctor.Surname}";
-        appointmentResponse.DoctorName = doctor.MedicalSpeciality.Value;
+        appointmentResponse.DoctorSpeciality = doctor.MedicalSpeciality.Value;
+        appointmentResponse.PatientName = $"{patient.FirstName} { patient.Surname}";
 
         if (role.Equals("ADMIN"))
         {
