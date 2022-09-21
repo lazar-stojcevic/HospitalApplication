@@ -86,7 +86,7 @@ public class AppointmentService : IAppointmentService
 
     public async Task<ICollection<Appointment>?> GetDoctorsFutureAppointmentsAsync(Guid doctorId)
     {
-        var list = await _appointmentRepository.GetFutureAppointmentsForDoctor(doctorId);
+        var list = await _appointmentRepository.GetUndoneDoctorAppointments(doctorId);
         var retVal = new List<Appointment>();
         if (list != null)
         {

@@ -12,6 +12,6 @@ public interface IAppointmentRepository
     Task<ICollection<AppointmentDto>?> GetAppointmentsForDoctor(Guid doctorId);
     Task<ICollection<AppointmentDto>?> GetAppointmentsForDoctorByDate(Guid doctorId, DateTime date);
     Task<ICollection<AppointmentDto>?> GetAppointmentsForPatientByDate(Guid patientId, DateTime date);
-    Task<ICollection<AppointmentDto>?> GetFutureAppointmentsForDoctor(Guid doctorId);
+    Task<ICollection<AppointmentDto>?> GetUndoneDoctorAppointments(Guid doctorId);
 }
 

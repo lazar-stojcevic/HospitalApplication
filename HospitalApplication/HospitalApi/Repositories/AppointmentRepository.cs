@@ -234,7 +234,7 @@ public class AppointmentRepository : IAppointmentRepository
         return retVal!;
     }
 
-    public async Task<ICollection<AppointmentDto>?> GetFutureAppointmentsForDoctor(Guid doctorId)
+    public async Task<ICollection<AppointmentDto>?> GetUndoneDoctorAppointments(Guid doctorId)
     {
         ScanRequest scanFilter = new()
         {
@@ -242,9 +242,8 @@ public class AppointmentRepository : IAppointmentRepository
             ConsistentRead = true,
             ExpressionAttributeValues = new Dictionary<string, AttributeValue> {
                 {":doctor", new AttributeValue { S = doctorId.ToString() }},
-                {":now", new AttributeValue { S = DateTime.Now.ToString("o") }}
             },
-            FilterExpression = "DoctorId = :doctor AND StartTime > :now",
+            FilterExpression = "DoctorId = :doctor",
         };
         var response = await _dynamoDb.ScanAsync(scanFilter);
         if (response.Count == 0)
