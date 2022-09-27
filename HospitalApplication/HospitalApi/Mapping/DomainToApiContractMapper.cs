@@ -158,7 +158,7 @@ public static class DomainToApiContractMapper
             EndTime = appointment.EndTime.Value,
             StartTime = appointment.StartTime.Value,
             Report = appointment.Report?.Value ?? "",
-            Price = appointment.Price?.Value ?? 0,
+            Price = appointment.Price?.Value.ToString() ?? "0",
         };
     }
 
@@ -174,7 +174,7 @@ public static class DomainToApiContractMapper
                 EndTime = appointment.EndTime.Value,
                 StartTime = appointment.StartTime.Value,
                 Report = appointment.Report?.Value ?? string.Empty,
-                Price = appointment.Price?.Value ?? 0
+                Price = appointment.Price?.Value.ToString() ?? "0"
             }).ToList(),
         };
     }

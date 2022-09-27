@@ -70,6 +70,10 @@ public class GetPatientAppointmentsEndpoint : Endpoint<GetPatientAppointmentsReq
         {
             await SendOkAsync(_anonymizationService.AnonymiseAppointments(appointmentsResponse),ct);
             return;
+        }else if (role.Equals("DOCTOR"))
+        {
+            await SendOkAsync(_anonymizationService.AnonymiseAppointmentsForDoctor(appointmentsResponse), ct);
+            return;
         }
         await SendOkAsync(appointmentsResponse, ct);
     }

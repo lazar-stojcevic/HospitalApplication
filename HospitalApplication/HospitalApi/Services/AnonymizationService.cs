@@ -247,11 +247,28 @@ public class AnonymizationService : IAnonymizationService
             DoctorId = Guid.Parse(appointment.DoctorId.ToString()),
             EndTime = appointment.EndTime,
             StartTime = appointment.StartTime,
-            Price = appointment.Price,
+            Price = AnonymiseString(appointment.Price ?? string.Empty),
             Report = AnonymiseString(appointment.Report ?? string.Empty),
             DoctorName = AnonymiseString(appointment.DoctorName),
             DoctorSpeciality = appointment.DoctorSpeciality,
             PatientName = AnonymiseString(appointment.PatientName),
+        };
+    }
+
+    public AppointmentResponse AnonymiseAppointmentResponseForDoctor(AppointmentResponse appointment)
+    {
+        return new AppointmentResponse
+        {
+            Id = appointment.Id,
+            PatientId = Guid.Parse(appointment.PatientId.ToString()),
+            DoctorId = Guid.Parse(appointment.DoctorId.ToString()),
+            EndTime = appointment.EndTime,
+            StartTime = appointment.StartTime,
+            Price = AnonymiseString(appointment.Price ?? string.Empty),
+            Report = appointment.Report,
+            DoctorName = appointment.DoctorName,
+            DoctorSpeciality = appointment.DoctorSpeciality,
+            PatientName = appointment.PatientName,
         };
     }
 
@@ -276,6 +293,16 @@ public class AnonymizationService : IAnonymizationService
         foreach (var appointment in appointments.Appointments)
         {
             response.Appointments.Add(AnonymiseAppointmentResponse(appointment));
+        }
+        return response;
+    }
+
+    public MultipleAppointmentsResponse AnonymiseAppointmentsForDoctor(MultipleAppointmentsResponse appointments)
+    {
+        var response = new MultipleAppointmentsResponse();
+        foreach (var appointment in appointments.Appointments)
+        {
+            response.Appointments.Add(AnonymiseAppointmentResponseForDoctor(appointment));
         }
         return response;
     }

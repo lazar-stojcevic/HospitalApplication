@@ -21,7 +21,7 @@ namespace HospitalApi.Mapping
                 EndTime = appointment.EndTime,
                 StartTime = appointment.StartTime,
                 Report = appointment.Report,
-                Price = appointment.Price
+                Price = appointment.Price.ToString()
             }));
             return response;
         }
