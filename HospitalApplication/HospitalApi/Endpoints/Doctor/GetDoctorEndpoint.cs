@@ -35,11 +35,11 @@ public class GetDoctorEndpoint : Endpoint<GetDoctorRequest, DoctorResponse>
         var role = string.Empty;
         if (context.User != null)
         {
-            username = context.User.FindFirstValue(ClaimTypes.Name);
+            username = context.User.FindFirstValue("Username");
             role = context.User.FindFirstValue(ClaimTypes.Role);
         }
 
-        if (role.Equals("DOCTOR") && doctor.Username.Equals(username))
+        if (role.Equals("DOCTOR") && doctor.Username.ToString().Equals(username))
         {
             await SendOkAsync(doctor.ToDoctorResponse(), ct);
         }
