@@ -24,7 +24,7 @@ public class UpdateDoctorEndpoint : Endpoint<UpdateDoctorRequest, DoctorResponse
         var username = string.Empty;
         if (context.User != null)
         {
-            username = context.User.FindFirstValue(ClaimTypes.Name);
+            username = context.User.FindFirstValue("Username");
         }
 
         var existingDoctor = await _doctorService.GetAsync(Guid.Parse(req.Id));
@@ -35,7 +35,7 @@ public class UpdateDoctorEndpoint : Endpoint<UpdateDoctorRequest, DoctorResponse
             return;
         }
 
-        if (!existingDoctor.Username.Equals(username))
+        if (!existingDoctor.Username.ToString().Equals(username))
         {
             await SendForbiddenAsync(ct);
             return;

@@ -34,7 +34,7 @@ public class GetAllDoctorsEndpoint : Endpoint<EmptyRequest, GetAllDoctorsRespons
         var role = string.Empty;
         if (context.User != null)
         {
-            result = context.User.FindFirstValue(ClaimTypes.Name);
+            result = context.User.FindFirstValue("Username");
             role = context.User.FindFirstValue(ClaimTypes.Role);
         }
 
