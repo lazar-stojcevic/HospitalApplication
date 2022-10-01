@@ -24,10 +24,10 @@ public class UpdatePatientEndpoint : Endpoint<UpdatePatientRequest, PatientRespo
         var username = string.Empty;
         if (context.User != null)
         {
-            username = context.User.FindFirstValue(ClaimTypes.Name);
+            username = context.User.FindFirstValue("Username");
         }
 
-        var existingPatient = await _patientService.GetAsync(req.Id);
+        var existingPatient = await _patientService.GetAsync(req.Id, true);
 
         if (existingPatient is null)
         {
@@ -35,7 +35,7 @@ public class UpdatePatientEndpoint : Endpoint<UpdatePatientRequest, PatientRespo
             return;
         }
 
-        if (!existingPatient.Username.Equals(username))
+        if (!existingPatient.Username.ToString().Equals(username))
         {
             await SendForbiddenAsync(ct);
             return;
@@ -43,6 +43,7 @@ public class UpdatePatientEndpoint : Endpoint<UpdatePatientRequest, PatientRespo
 
         var patient = req.ToPatient();
         patient.SetPassword(existingPatient.Password);
+        patient.SetAccountId(existingPatient.AccountId.Value);
         await _patientService.UpdateAsync(patient);
 
         var patinetResponse = patient.ToPatientResponse();

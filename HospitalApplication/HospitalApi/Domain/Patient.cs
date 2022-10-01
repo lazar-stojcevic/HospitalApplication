@@ -19,12 +19,10 @@ public class Patient
     public PhoneNumber PhoneNumber { get; init; } = default!;
     public EmailAddress Email { get; init; } = default!;
     public DateOfBirth DateOfBirth { get; init; } = default!;
-    public string Password { get; private set; } = default!;
-
+    public string Password { get; set; } = default!;
 
     public AccountId AccountId { get; set; } = default!;
 
     public AccountId SetAccountId(Guid id) => AccountId = AccountId.From(id);
-
     public void SetPassword(string password) => Password = password;
 }

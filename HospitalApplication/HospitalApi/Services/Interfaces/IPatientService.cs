@@ -6,7 +6,7 @@ public interface IPatientService
 {
     Task<bool> CreateAsync(Patient patient);
 
-    Task<Patient?> GetAsync(Guid id);
+    Task<Patient?> GetAsync(Guid id, bool withPassword = false);
 
     Task<ICollection<Patient>?> GetAllAsync();
 

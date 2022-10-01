@@ -53,7 +53,7 @@ public static class ApiContractToDomainMapper
             Weight = Weight.From(request.Weight),
             PersonalNumber = PersonalNumber.From(request.PersonalNumber),
             PhoneNumber = PhoneNumber.From(request.PhoneNumber),
-            DateOfBirth = DateOfBirth.From(DateOnly.FromDateTime(request.DateOfBirth))
+            DateOfBirth = DateOfBirth.From(DateOnly.FromDateTime(request.DateOfBirth)),
         };
     }
 

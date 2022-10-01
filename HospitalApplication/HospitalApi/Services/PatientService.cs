@@ -35,9 +35,13 @@ public class PatientService : IPatientService
         return await _patientRepository.CreateAsync(patientDto);
     }
 
-    public async Task<Patient?> GetAsync(Guid id)
+    public async Task<Patient?> GetAsync(Guid id, bool withPassword = false)
     {
         var patientDto = await _patientRepository.GetAsync(id);
+        if (withPassword)
+        {
+            return patientDto?.ToPatientWithPassword();
+        }
         return patientDto?.ToPatient();
     }
 
