@@ -27,7 +27,7 @@ public class UpdateDoctorEndpoint : Endpoint<UpdateDoctorRequest, DoctorResponse
             username = context.User.FindFirstValue("Username");
         }
 
-        var existingDoctor = await _doctorService.GetAsync(Guid.Parse(req.Id));
+        var existingDoctor = await _doctorService.GetAsync(Guid.Parse(req.Id), true);
 
         if (existingDoctor is null)
         {

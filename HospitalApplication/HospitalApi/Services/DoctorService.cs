@@ -47,9 +47,13 @@ namespace HospitalApi.Services
             return new List<Doctor>();
         }
 
-        public async Task<Doctor?> GetAsync(Guid id)
+        public async Task<Doctor?> GetAsync(Guid id, bool withPassword = false)
         {
             var doctorDto = await _doctorRepository.GetAsync(id);
+            if (withPassword)
+            {
+                return doctorDto?.ToDoctorWithPassword();
+            }
             return doctorDto?.ToDoctor();
         }
 

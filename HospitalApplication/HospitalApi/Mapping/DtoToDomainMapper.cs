@@ -60,6 +60,23 @@ public static class DtoToDomainMapper
         };
     }
 
+    public static Doctor ToDoctorWithPassword(this DoctorDto doctorDto)
+    {
+        return new Doctor
+        {
+            Id = DoctorId.From(Guid.Parse(doctorDto.Id)),
+            Email = EmailAddress.From(doctorDto.Email),
+            Username = Username.From(doctorDto.Username),
+            FirstName = FirstName.From(doctorDto.FirstName),
+            Surname = Surname.From(doctorDto.Surname),
+            PhoneNumber = PhoneNumber.From(doctorDto.PhoneNumber),
+            PersonalNumber = PersonalNumber.From(doctorDto.PersonalNumber),
+            DateOfBirth = DateOfBirth.From(DateOnly.FromDateTime(doctorDto.DateOfBirth)),
+            MedicalSpeciality = MedicalSpeciality.From(doctorDto.MedicalSpeciality),
+            Password = doctorDto.Password
+        };
+    }
+
     public static Accountant ToAccountant(this AccountantDto accountantDto)
     {
         return new Accountant

@@ -6,7 +6,7 @@ namespace HospitalApi.Services.Interfaces
     {
         Task<bool> CreateAsync(Doctor doctor);
 
-        Task<Doctor?> GetAsync(Guid id);
+        Task<Doctor?> GetAsync(Guid id, bool withPassword = false);
 
         Task<ICollection<Doctor>?> GetAllAsync();
 
