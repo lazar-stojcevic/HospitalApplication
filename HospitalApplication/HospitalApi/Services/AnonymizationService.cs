@@ -388,6 +388,7 @@ public class AnonymizationService : IAnonymizationService
             if (doctor.Username == username)
             {
                 response.Doctors.Add(doctor);
+                continue;
             }
             response.Doctors.Add(AnonymiseDoctorResponse(doctor));
         }
