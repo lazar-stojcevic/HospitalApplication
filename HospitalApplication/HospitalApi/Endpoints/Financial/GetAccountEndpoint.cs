@@ -8,7 +8,7 @@ using System.Security.Claims;
 
 namespace HospitalApi.Endpoints.Financial;
 
-[HttpGet("accounts/{id:guid}"), Authorize(Roles = "PATIENT,ACCOUNTANT")]
+[HttpGet("accounts/{patientId:guid}"), Authorize(Roles = "PATIENT,ACCOUNTANT")]
 public class GetAccountEndpoint : Endpoint<GetAccountRequest, AccountResponse>
 {
     private readonly IAccountService _accountService;
@@ -31,7 +31,7 @@ public class GetAccountEndpoint : Endpoint<GetAccountRequest, AccountResponse>
             return;
         }
 
-        var account = await _accountService.GetAsync(patient.Id.Value);
+        var account = await _accountService.GetAsync(patient.AccountId.Value);
         if (account is null)
         {
             await SendNotFoundAsync(ct);
