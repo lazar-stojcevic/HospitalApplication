@@ -114,6 +114,22 @@ public static class DtoToDomainMapper
         };
     }
 
+    public static Accountant ToAccountantWithPassword(this AccountantDto accountantDto)
+    {
+        return new Accountant
+        {
+            Id = AccountantId.From(Guid.Parse(accountantDto.Id)),
+            Email = EmailAddress.From(accountantDto.Email),
+            Username = Username.From(accountantDto.Username),
+            FirstName = FirstName.From(accountantDto.FirstName),
+            Surname = Surname.From(accountantDto.Surname),
+            PhoneNumber = PhoneNumber.From(accountantDto.PhoneNumber),
+            PersonalNumber = PersonalNumber.From(accountantDto.PersonalNumber),
+            DateOfBirth = DateOfBirth.From(DateOnly.FromDateTime(accountantDto.DateOfBirth)),
+            Password = accountantDto.Password
+        };
+    }
+
     public static Admin ToAdmin(this AdminDto adminDto)
     {
         return new Admin

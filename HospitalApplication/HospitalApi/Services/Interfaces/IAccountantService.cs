@@ -6,7 +6,7 @@ public interface IAccountantService
 {
     Task<bool> CreateAsync(Accountant accountant);
 
-    Task<Accountant?> GetAsync(Guid id);
+    Task<Accountant?> GetAsync(Guid id, bool withPassword = false);
 
     Task<ICollection<Accountant>?> GetAllAsync();
 

@@ -46,9 +46,13 @@ public class AccountantService : IAccountantService
         return new List<Accountant>();
     }
 
-    public async Task<Accountant?> GetAsync(Guid id)
+    public async Task<Accountant?> GetAsync(Guid id, bool withPassword = false)
     {
         var accountantDto = await _accountantRepository.GetAsync(id);
+        if (withPassword)
+        {
+            return accountantDto?.ToAccountantWithPassword();
+        }
         return accountantDto?.ToAccountant();
     }
 

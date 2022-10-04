@@ -31,24 +31,22 @@ public class GetAccountantEndpoint : Endpoint<GetAccountantRequest, AccountantRe
         }
 
         var context = HttpContext;
-        var result = string.Empty;
+        var role = string.Empty;
+        var username = string.Empty;
         if (context.User != null)
         {
-            result = context.User.FindFirstValue(ClaimTypes.Role);
+            username = context.User.FindFirstValue("Username");
+            role = context.User.FindFirstValue(ClaimTypes.Role);
         }
-        if (result.Equals("ACCOUNTANT"))
+        if (role.Equals("ACCOUNTANT") && accountant.Username.ToString().Equals(username))
         {
             var accountantResponse = accountant.ToAccountantResponse();
             await SendOkAsync(accountantResponse, ct);
         }
-        else if (result.Equals("ADMIN") || result.Equals("DOCTOR"))
+        else
         {
             var anonymisedData = _anonymizationService.AnonymiseAccountantData(accountant);
             await SendOkAsync(anonymisedData, ct);
-        }
-        else
-        {
-            await SendUnauthorizedAsync(ct);
         }
     }
 }

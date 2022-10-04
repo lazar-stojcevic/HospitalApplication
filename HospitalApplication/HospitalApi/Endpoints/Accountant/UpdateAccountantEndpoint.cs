@@ -24,10 +24,10 @@ public class UpdateAccountantEndpoint : Endpoint<UpdateAccountantRequest, Accoun
         var username = string.Empty;
         if (context.User != null)
         {
-            username = context.User.FindFirstValue(ClaimTypes.Name);
+            username = context.User.FindFirstValue("Username");
         }
 
-        var existingAccountant = await _accoutantService.GetAsync(Guid.Parse(req.Id));
+        var existingAccountant = await _accoutantService.GetAsync(Guid.Parse(req.Id), true);
 
         if (existingAccountant == null)
         {

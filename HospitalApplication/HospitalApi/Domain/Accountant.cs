@@ -13,7 +13,7 @@ public class Accountant
     public PhoneNumber PhoneNumber { get; init; } = default!;
     public EmailAddress Email { get; init; } = default!;
     public DateOfBirth DateOfBirth { get; init; } = default!;
-    public string Password { get; private set; } = default!;
+    public string Password { get; set; } = default!;
 
     public void SetPassword(string password) => Password = password;
 }
