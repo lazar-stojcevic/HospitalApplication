@@ -33,7 +33,7 @@ public class GetAccountsWithPatientInfo : Endpoint<GetAccountsRequest, AccountsR
             AccountNumber = x.AccountNumber.Value,
             Balance = x.Balance.Value,
             PatientId = x.PatientId.Value,
-            PatientUsername = patients.Where(p => p.AccountId.Value.Equals(x.Id)).Select(p => p.Username.Value).First(),
+            PatientUsername = patients.Where(p => p.AccountId.Value.Equals(x.Id.Value)).Select(p => p.Username.Value).FirstOrDefault(),
         }).ToList();
 
         await SendOkAsync(retVal, ct);
