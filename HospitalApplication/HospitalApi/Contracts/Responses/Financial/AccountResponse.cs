@@ -6,5 +6,6 @@ public class AccountResponse
     public string AccountNumber { get; init; } = default!;
     public double Balance { get; init; } = default!;
     public Guid PatientId { get; init; }
+    public string? PatientUsername { get; init; }
 }
 
