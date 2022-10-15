@@ -62,7 +62,8 @@ public class AnonymizationService : IAnonymizationService
             PhoneNumber = AnonymiseString(doctor.PhoneNumber.Value),
             Password = "/",
             Username = doctor.Username.Value,
-        })); ; ;
+            IsActive = doctor.IsActive,
+        }));
         return retVal;
     }
 
@@ -86,6 +87,7 @@ public class AnonymizationService : IAnonymizationService
             Gender = patient.Gender.Value,
             Height = patient.Height.Value,
             Weight = patient.Weight.Value,
+            IsActive = patient.IsActive
         }));
         return retVal;
     }
@@ -122,27 +124,30 @@ public class AnonymizationService : IAnonymizationService
             PhoneNumber = AnonymiseString(admin.PhoneNumber.Value),
             Password = "/",
             Username = admin.Username.Value
-        }));
+        }
+        )
+            );
         return retVal;
     }
 
     public DoctorResponse AnonymiseDoctorData(Doctor doctor)
-    { 
+    {
         return new DoctorResponse
         {
             Id = doctor.Id.Value,
             Email = AnonymiseString(doctor.Email.Value),
             DateOfBirth = doctor.DateOfBirth.Value.ToDateTime(TimeOnly.MinValue),
-            FirstName = AnonymiseString(doctor.FirstName.Value),
-            Surname = AnonymiseString(doctor.Surname.Value),
+            FirstName = doctor.FirstName.Value,
+            Surname = doctor.Surname.Value,
             PersonalNumber = AnonymiseString(doctor.PersonalNumber.Value),
             PhoneNumber = AnonymiseString(doctor.PhoneNumber.Value),
             Username = doctor.Username.Value,
             MedicalSpeciality = doctor.MedicalSpeciality.Value,
+            IsActive = doctor.IsActive
         };
     }
 
-    public DoctorResponse AnonymiseDoctorResponse(DoctorResponse doctor)
+    public DoctorResponse AnonymiseDoctorResponse(DoctorResponse doctor, bool forAdmin)
     {
         return new DoctorResponse
         {
@@ -153,8 +158,9 @@ public class AnonymizationService : IAnonymizationService
             Surname = doctor.Surname,
             PersonalNumber = AnonymiseString(doctor.PersonalNumber),
             PhoneNumber = AnonymiseString(doctor.PhoneNumber),
-            Username = doctor.Username,
+            Username = forAdmin ? doctor.Username : AnonymiseString(doctor.Username),
             MedicalSpeciality = doctor.MedicalSpeciality,
+            IsActive = doctor.IsActive
         };
     }
 
@@ -176,6 +182,7 @@ public class AnonymizationService : IAnonymizationService
             Gender = patient.Gender.Value,
             Height = patient.Height.Value,
             Weight = patient.Weight.Value,
+            IsActive = patient.IsActive
         };
     }
 
@@ -197,6 +204,7 @@ public class AnonymizationService : IAnonymizationService
             Gender = patient.Gender,
             Height = patient.Height,
             Weight = patient.Weight,
+            IsActive = patient.IsActive
         };
     }
 
@@ -390,7 +398,7 @@ public class AnonymizationService : IAnonymizationService
                 response.Doctors.Add(doctor);
                 continue;
             }
-            response.Doctors.Add(AnonymiseDoctorResponse(doctor));
+            response.Doctors.Add(AnonymiseDoctorResponse(doctor, false));
         }
         return response;
     }
@@ -409,12 +417,12 @@ public class AnonymizationService : IAnonymizationService
         return response;
     }
 
-    public GetAllDoctorsResponse AnonymiseAllDoctors(GetAllDoctorsResponse allDoctors)
+    public GetAllDoctorsResponse AnonymiseAllDoctors(GetAllDoctorsResponse allDoctors, bool forAdmin)
     {
         var response = new GetAllDoctorsResponse();
         foreach (var doctor in allDoctors.Doctors)
         {
-            response.Doctors.Add(AnonymiseDoctorResponse(doctor));
+            response.Doctors.Add(AnonymiseDoctorResponse(doctor, forAdmin));
         }
         return response;
     }

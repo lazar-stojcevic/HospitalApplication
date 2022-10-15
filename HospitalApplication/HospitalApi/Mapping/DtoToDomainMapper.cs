@@ -29,7 +29,8 @@ public static class DtoToDomainMapper
             Height = Height.From(patientDto.Height),
             Weight = Weight.From(patientDto.Weight),
             DateOfBirth = DateOfBirth.From(DateOnly.FromDateTime(patientDto.DateOfBirth)),
-            AccountId = AccountId.From(Guid.Parse(patientDto.AccountId))
+            AccountId = AccountId.From(Guid.Parse(patientDto.AccountId)),
+            IsActive = patientDto.IsActive
         };
     }
 
@@ -51,6 +52,7 @@ public static class DtoToDomainMapper
             Weight = Weight.From(patientDto.Weight),
             DateOfBirth = DateOfBirth.From(DateOnly.FromDateTime(patientDto.DateOfBirth)),
             AccountId = AccountId.From(Guid.Parse(patientDto.AccountId)),
+            IsActive = patientDto.IsActive,
             Password = patientDto.Password,
         };
     }
@@ -79,6 +81,7 @@ public static class DtoToDomainMapper
             PersonalNumber = PersonalNumber.From(doctorDto.PersonalNumber),
             DateOfBirth = DateOfBirth.From(DateOnly.FromDateTime(doctorDto.DateOfBirth)),
             MedicalSpeciality = MedicalSpeciality.From(doctorDto.MedicalSpeciality),
+            IsActive = doctorDto.IsActive
         };
     }
 
@@ -95,6 +98,7 @@ public static class DtoToDomainMapper
             PersonalNumber = PersonalNumber.From(doctorDto.PersonalNumber),
             DateOfBirth = DateOfBirth.From(DateOnly.FromDateTime(doctorDto.DateOfBirth)),
             MedicalSpeciality = MedicalSpeciality.From(doctorDto.MedicalSpeciality),
+            IsActive = doctorDto.IsActive,
             Password = doctorDto.Password
         };
     }

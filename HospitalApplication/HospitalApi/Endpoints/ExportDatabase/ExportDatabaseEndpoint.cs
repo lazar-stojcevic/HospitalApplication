@@ -40,7 +40,7 @@ public class ExportDatabaseEndpoint : Endpoint<EmptyRequest, ExportDatabaseRespo
     public override async Task HandleAsync(EmptyRequest req, CancellationToken ct)
     {
         var patients = await _patientService.GetAllAsync();
-        var doctors = await _doctorService.GetAllAsync();
+        var doctors = await _doctorService.GetAllAsync(false);
         var accounts = await _accountService.GetAllAsync();
         var appointments = await _appointmentService.GetAllAsync();
         var accountants = await _accountantService.GetAllAsync();

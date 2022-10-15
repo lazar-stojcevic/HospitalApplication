@@ -23,7 +23,8 @@ public static class DomainToDtoMapper
             PhoneNumber = patient.PhoneNumber.Value,
             DateOfBirth = patient.DateOfBirth.Value.ToDateTime(TimeOnly.MinValue),
             AccountId = patient.AccountId?.ToString() ?? "",
-            Password = patient.Password
+            Password = patient.Password,
+            IsActive = patient.IsActive
         };
     }
 
@@ -51,7 +52,8 @@ public static class DomainToDtoMapper
             PhoneNumber = doctor.PhoneNumber.Value,
             DateOfBirth = doctor.DateOfBirth.Value.ToDateTime(TimeOnly.MinValue),
             MedicalSpeciality = doctor.MedicalSpeciality.Value,
-            Password = doctor.Password
+            Password = doctor.Password,
+            IsActive = doctor.IsActive
         };
     }
 

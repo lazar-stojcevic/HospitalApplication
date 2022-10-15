@@ -32,7 +32,7 @@ namespace HospitalApi.Services
             return await _doctorRepository.CreateAsync(patientDto);
         }
 
-        public async Task<ICollection<Doctor>?> GetAllAsync()
+        public async Task<ICollection<Doctor>?> GetAllAsync(bool onlyActive)
         {
             var list = await _doctorRepository.GetAllAsync();
             var retVal = new List<Doctor>();
@@ -41,6 +41,10 @@ namespace HospitalApi.Services
                 foreach (var item in list)
                 {
                     retVal.Add(item.ToDoctor());
+                }
+                if (onlyActive)
+                {
+                    return retVal.Where(x => x.IsActive).ToList();
                 }
                 return retVal;
             }

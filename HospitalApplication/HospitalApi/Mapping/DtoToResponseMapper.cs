@@ -44,7 +44,8 @@ namespace HospitalApi.Mapping
                 Weight = patient.Weight,
                 PersonalNumber = patient.PersonalNumber,
                 PhoneNumber = patient.PhoneNumber,
-                Username = patient.Username
+                Username = patient.Username,
+                IsActive = patient.IsActive,
             }));
             return response;
         }
@@ -62,7 +63,8 @@ namespace HospitalApi.Mapping
                 PersonalNumber = doctor.PersonalNumber,
                 PhoneNumber = doctor.PhoneNumber,
                 Username = doctor.Username,
-                MedicalSpeciality = doctor.MedicalSpeciality
+                MedicalSpeciality = doctor.MedicalSpeciality,
+                IsActive = doctor.IsActive,
             }));
             return response;
         }

@@ -27,14 +27,14 @@ public class AuthenticationService : IAuthenticationService
     {
         var doctor = await _doctorRepository.GetByUsername(login.Username);
 
-        if (doctor != null && BCrypt.Net.BCrypt.Verify(login.Password, doctor.Password))
+        if (doctor != null && BCrypt.Net.BCrypt.Verify(login.Password, doctor.Password) && doctor.IsActive)
         {
             return new LoginResponse { Token = GenerateJwtForDoctor(doctor), Role = "DOCTOR", UserId = Guid.Parse(doctor.Id) };
         }
 
         var patient = await _patientRepository.GetByUsername(login.Username);
 
-        if (patient != null && BCrypt.Net.BCrypt.Verify(login.Password, patient.Password))
+        if (patient != null && BCrypt.Net.BCrypt.Verify(login.Password, patient.Password) && patient.IsActive)
         {
             return new LoginResponse { Token = GenerateJwtForPatient(patient), Role = "PATIENT", UserId = Guid.Parse(patient.Id) };
         }

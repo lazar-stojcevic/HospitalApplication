@@ -34,6 +34,7 @@ public static class ApiContractToDomainMapper
             PersonalNumber = PersonalNumber.From(request.PersonalNumber),
             PhoneNumber = PhoneNumber.From(request.PhoneNumber),
             DateOfBirth = DateOfBirth.From(DateOnly.FromDateTime(request.DateOfBirth)),
+            IsActive = true
         };
     }
 
@@ -54,6 +55,7 @@ public static class ApiContractToDomainMapper
             PersonalNumber = PersonalNumber.From(request.PersonalNumber),
             PhoneNumber = PhoneNumber.From(request.PhoneNumber),
             DateOfBirth = DateOfBirth.From(DateOnly.FromDateTime(request.DateOfBirth)),
+            IsActive = true
         };
     }
 
@@ -78,6 +80,7 @@ public static class ApiContractToDomainMapper
             PhoneNumber = PhoneNumber.From(request.PhoneNumber),
             DateOfBirth = DateOfBirth.From(DateOnly.FromDateTime(request.DateOfBirth)),
             MedicalSpeciality = MedicalSpeciality.From(request.MedicalSpeciality),
+            IsActive = true
         };
     }
 
@@ -94,6 +97,7 @@ public static class ApiContractToDomainMapper
             PhoneNumber = PhoneNumber.From(request.PhoneNumber),
             DateOfBirth = DateOfBirth.From(DateOnly.FromDateTime(request.DateOfBirth)),
             MedicalSpeciality = MedicalSpeciality.From(request.MedicalSpeciality),
+            IsActive = true
         };
     }
 

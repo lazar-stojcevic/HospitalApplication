@@ -28,6 +28,7 @@ public static class DomainToApiContractMapper
             PhoneNumber = patient.PhoneNumber.Value,
             DateOfBirth = patient.DateOfBirth.Value.ToDateTime(TimeOnly.MinValue),
             AccountId = patient.AccountId?.Value ?? null,
+            IsActive = patient.IsActive
         };
     }
 
@@ -62,6 +63,7 @@ public static class DomainToApiContractMapper
                 PhoneNumber = x.PhoneNumber.Value,
                 DateOfBirth = x.DateOfBirth.Value.ToDateTime(TimeOnly.MinValue),
                 AccountId = x.AccountId.Value,
+                IsActive = x.IsActive
             }).ToList()
         };
     }
@@ -93,6 +95,7 @@ public static class DomainToApiContractMapper
             PhoneNumber = doctor.PhoneNumber.Value,
             DateOfBirth = doctor.DateOfBirth.Value.ToDateTime(TimeOnly.MinValue),
             MedicalSpeciality = doctor.MedicalSpeciality.Value,
+            IsActive = doctor.IsActive
         };
     }
 
@@ -111,6 +114,7 @@ public static class DomainToApiContractMapper
                 PhoneNumber = doctor.PhoneNumber.Value,
                 DateOfBirth = doctor.DateOfBirth.Value.ToDateTime(TimeOnly.MinValue),
                 MedicalSpeciality = doctor.MedicalSpeciality.Value,
+                IsActive = doctor.IsActive
             }).ToList()
         };
     }

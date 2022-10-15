@@ -57,7 +57,7 @@ public class GetPatientAppointmentsEndpoint : Endpoint<GetPatientAppointmentsReq
 
         var appointmentsResponse = appointments.ToMultipleAppointmentResponse();
 
-        var doctors = await _doctorService.GetAllAsync();
+        var doctors = await _doctorService.GetAllAsync(false);
 
         foreach (var appointment in appointmentsResponse.Appointments)
         {

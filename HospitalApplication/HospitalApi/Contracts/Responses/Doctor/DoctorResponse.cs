@@ -11,5 +11,6 @@ public class DoctorResponse
     public string Email { get; init; } = default!;
     public DateTime DateOfBirth { get; init; } = default!;
     public string MedicalSpeciality { get; init; } = default!;
+    public bool IsActive { get; init; } = default!;
 }
 

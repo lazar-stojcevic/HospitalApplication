@@ -24,6 +24,7 @@ public class PatientDto
     public string PhoneNumber { get; init; } = default!;
     public string Email { get; init; } = default!;
     public DateTime DateOfBirth { get; init; }
+    public bool IsActive { get; set; }
     public string Password { get; init; } = default!;
 
     public string AccountId { get; set; } = default!;

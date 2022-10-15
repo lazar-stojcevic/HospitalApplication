@@ -21,14 +21,6 @@ public class GetAllDoctorsEndpoint : Endpoint<EmptyRequest, GetAllDoctorsRespons
 
     public override async Task HandleAsync(EmptyRequest req, CancellationToken ct)
     {
-        var doctors = await _doctorService.GetAllAsync();
-
-        if (doctors is null)
-        {
-            await SendNotFoundAsync(ct);
-            return;
-        }
-
         var context = HttpContext;
         var result = string.Empty;
         var role = string.Empty;
@@ -38,12 +30,27 @@ public class GetAllDoctorsEndpoint : Endpoint<EmptyRequest, GetAllDoctorsRespons
             role = context.User.FindFirstValue(ClaimTypes.Role);
         }
 
+        var doctors = await _doctorService.GetAllAsync(role.Equals("PATIENT"));
+
+        if (doctors is null)
+        {
+            await SendNotFoundAsync(ct);
+            return;
+        }
+
         var doctorsResponse = doctors.ToDoctorsResponse();
         if (role.Equals("DOCTOR"))
         {
             await SendOkAsync(_anonymizationService.AnonymiseAllDoctorsExceptCurrent(doctorsResponse, result), ct);
             return;
         }
-        await SendOkAsync(_anonymizationService.AnonymiseAllDoctors(doctorsResponse), ct);
+        if (role.Equals("ADMIN"))
+        {
+            await SendOkAsync(_anonymizationService.AnonymiseAllDoctors(doctorsResponse,true), ct);
+        }
+        else
+        {
+            await SendOkAsync(_anonymizationService.AnonymiseAllDoctors(doctorsResponse, false), ct);
+        }
     }
 }

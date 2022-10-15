@@ -20,6 +20,7 @@ public class Patient
     public EmailAddress Email { get; init; } = default!;
     public DateOfBirth DateOfBirth { get; init; } = default!;
     public string Password { get; set; } = default!;
+    public bool IsActive { get; set; }
 
     public AccountId AccountId { get; set; } = default!;
 

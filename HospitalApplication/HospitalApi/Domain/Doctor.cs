@@ -15,6 +15,7 @@ public class Doctor
     public DateOfBirth DateOfBirth { get; init; } = default!;
     public MedicalSpeciality MedicalSpeciality { get; init; } = default!;
     public string Password { get; set; } = default!;
+    public bool IsActive { get; set; } = default!;
 
     public void SetPassword(string password) => Password = password;
 }

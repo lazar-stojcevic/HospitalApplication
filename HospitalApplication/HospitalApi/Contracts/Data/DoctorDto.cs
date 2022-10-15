@@ -20,4 +20,5 @@ public class DoctorDto
     public DateTime DateOfBirth { get; init; } = default!;
     public string MedicalSpeciality { get; init; } = default!;
     public string Password { get; init; } = default!;
+    public bool IsActive { get; init; } = default!;
 }

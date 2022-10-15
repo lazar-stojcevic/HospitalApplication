@@ -26,7 +26,7 @@ public interface IAnonymizationService
     GetAllAdminsResponse AnonymiseAllAdminsExceptCurrent(GetAllAdminsResponse allAdmins, string username);
     GetAllDoctorsResponse AnonymiseAllDoctorsExceptCurrent(GetAllDoctorsResponse allDoctors, string username);
     MultipleAppointmentsResponse AnonymiseAppointments(MultipleAppointmentsResponse appointments);
-    GetAllDoctorsResponse AnonymiseAllDoctors(GetAllDoctorsResponse allDoctors);
+    GetAllDoctorsResponse AnonymiseAllDoctors(GetAllDoctorsResponse allDoctors, bool forAdmin);
     DoctorResponse AnonymiseDoctorData(Doctor doctor);
     GetAllPatientsResponse AnonymiseAllPatientsExceptCurrent(GetAllPatientsResponse allPatients, string username);
     MultipleAppointmentsResponse AnonymiseAppointmentsForDoctor(MultipleAppointmentsResponse appointments);
