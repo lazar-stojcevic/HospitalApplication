@@ -42,6 +42,8 @@ public class UpdatePatientEndpoint : Endpoint<UpdatePatientRequest, PatientRespo
         }
 
         var patient = req.ToPatient();
+        patient.IsActive = existingPatient.IsActive;
+
         patient.SetPassword(existingPatient.Password);
         patient.SetAccountId(existingPatient.AccountId.Value);
         await _patientService.UpdateAsync(patient);
