@@ -30,5 +30,6 @@ public interface IAnonymizationService
     DoctorResponse AnonymiseDoctorData(Doctor doctor);
     GetAllPatientsResponse AnonymiseAllPatientsExceptCurrent(GetAllPatientsResponse allPatients, string username);
     MultipleAppointmentsResponse AnonymiseAppointmentsForDoctor(MultipleAppointmentsResponse appointments);
+    AccountsResponse AnonymiseMultipleAccounts(AccountsResponse accounts);
 }
 

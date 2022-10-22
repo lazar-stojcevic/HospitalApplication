@@ -219,6 +219,23 @@ public class AnonymizationService : IAnonymizationService
         };
     }
 
+    public AccountsResponse AnonymiseMultipleAccounts(AccountsResponse accounts)
+    {
+        var retVal = new AccountsResponse();
+        foreach (var account in accounts.Accounts)
+        {
+            retVal.Accounts.Add(new AccountResponse()
+            {
+                Id = account.Id,
+                AccountNumber = AnonymiseString(account.AccountNumber),
+                PatientId = account.PatientId,
+                Balance = account.Balance,
+                PatientUsername = AnonymiseString(account.PatientUsername ?? "")
+            });
+        }
+        return retVal;
+    }
+
     public AccountResponse AnonymiseAccountResponse(AccountResponse account)
     {
         return new AccountResponse
@@ -226,6 +243,7 @@ public class AnonymizationService : IAnonymizationService
             Id = account.Id,
             AccountNumber = AnonymiseString(account.AccountNumber),
             Balance = account.Balance,
+            PatientUsername = AnonymiseString(account.PatientUsername),
             PatientId = Guid.Parse(account.PatientId.ToString()),
         };
     }
@@ -430,6 +448,12 @@ public class AnonymizationService : IAnonymizationService
     private string AnonymiseString(string report)
     {
         return new Regex("\\S").Replace(report, "*");
+    }
+
+    private double RandomDoubleValue()
+    {
+        Random rnd = new Random();
+        return rnd.Next(-500, 500) * 100;
     }
 }
 
