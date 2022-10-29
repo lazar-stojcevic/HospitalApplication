@@ -31,5 +31,11 @@ public interface IAnonymizationService
     GetAllPatientsResponse AnonymiseAllPatientsExceptCurrent(GetAllPatientsResponse allPatients, string username);
     MultipleAppointmentsResponse AnonymiseAppointmentsForDoctor(MultipleAppointmentsResponse appointments);
     AccountsResponse AnonymiseMultipleAccounts(AccountsResponse accounts);
+    ICollection<AdminDto>? AnonymiseAdminsByPseudonymization(ICollection<Admin>? admins);
+    ICollection<PatientDto>? AnonymisePatientsByPseudonymization(ICollection<Patient>? patients);
+    ICollection<DoctorDto>? AnonymiseDoctorsByPseudonymization(ICollection<Doctor>? doctors);
+    ICollection<AppointmentDto>? AnonymiseAppointmentsByPseudonymization(ICollection<Appointment>? appointments);
+    ICollection<AccountDto>? AnonymiseAccountsByPseudonymization(ICollection<Account>? accounts);
+    ICollection<AccountantDto>? AnonymiseAccountantsByPseudonymization(ICollection<Accountant>? accountants);
 }
 

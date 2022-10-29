@@ -6,13 +6,134 @@ using HospitalApi.Contracts.Responses.Doctor;
 using HospitalApi.Contracts.Responses.Financial;
 using HospitalApi.Contracts.Responses.Patient;
 using HospitalApi.Domain;
+using HospitalApi.Pseudonymization;
 using HospitalApi.Services.Interfaces;
+using LoremNET;
+using System.Linq;
 using System.Text.RegularExpressions;
 
 namespace HospitalApi.Services;
 public class AnonymizationService : IAnonymizationService
 {
     public static Random gen = new Random();
+
+
+    public ICollection<AccountDto>? AnonymiseAccountsByPseudonymization(ICollection<Account>? accounts)
+    {
+        var retVal = new List<AccountDto>();
+
+        retVal.AddRange(accounts!.Select(account => new AccountDto
+        {
+            Id = account.Id.Value.ToString(),
+            AccountNumber = $"123{gen.Next(1000, 9999)}{gen.Next(100, 999)}{gen.Next(100, 999)}",
+            Balance = account.Balance.Value,
+            PatientId = account.PatientId.Value.ToString(),
+        }));
+
+        return retVal;
+    }
+
+    public ICollection<AppointmentDto>? AnonymiseAppointmentsByPseudonymization(ICollection<Appointment>? appointments)
+    {
+        var retVal = new List<AppointmentDto>();
+
+        retVal.AddRange(appointments!.Select(appointment => new AppointmentDto
+        {
+            Id = appointment.Id.Value.ToString(),
+            PatientId = appointment.PatientId.Value.ToString(),
+            DoctorId = appointment.DoctorId.Value.ToString(),
+            EndTime = appointment.EndTime.Value,
+            StartTime = appointment.StartTime.Value,
+            Price = appointment.Price?.Value ?? 0,
+            // 5 to 12 words in sentence, in 2 to 10 sentences
+            Report = appointment.Report is null ? "" : Lorem.Paragraph(5, 12, 2, 10),
+        }));
+
+        return retVal;
+    }
+
+    public ICollection<DoctorDto>? AnonymiseDoctorsByPseudonymization(ICollection<Doctor>? doctors)
+    {
+        var retVal = new List<DoctorDto>();
+
+        retVal.AddRange(doctors!.Select(doctor => new DoctorDto
+        {
+            Id = doctor.Id.Value.ToString(),
+            Email = Lorem.Email(),
+            DateOfBirth = Lorem.DateTime(new DateTime(1950, 1, 1), new DateTime(2000, 1, 1)),
+            FirstName = GetRandomFirstName(),
+            Surname = GetRadnomSurname(),
+            MedicalSpeciality = doctor.MedicalSpeciality.Value.ToString(),
+            PersonalNumber = GetRandomPersonalNumber(),
+            PhoneNumber = GetRandomPhoneNumber(),
+            Password = "password",
+            Username = GetRandomUsername(),
+            IsActive = doctor.IsActive,
+        })); ;
+        return retVal;
+    }
+
+    public ICollection<PatientDto>? AnonymisePatientsByPseudonymization(ICollection<Patient>? patients)
+    {
+        var retVal = new List<PatientDto>();
+        retVal.AddRange(patients!.Select(patient => new PatientDto
+        {
+            Id = patient.Id.Value.ToString(),
+            Email = Lorem.Email(),
+            DateOfBirth = Lorem.DateTime(new DateTime(1950, 1, 1), new DateTime(2020, 1, 1)),
+            FirstName = patient.Gender.Value.Equals("Male") ? GetRandomMaleFirstName() : GetRadnomFemaleFirstName(),
+            Surname = GetRadnomSurname(),
+            PersonalNumber = GetRandomPersonalNumber(),
+            PhoneNumber = GetRandomPhoneNumber(),
+            Password = "password",
+            Username = GetRandomUsername(),
+            AccountId = patient.AccountId.Value.ToString(),
+            Adress = GetRandomAddress(),
+            BloodType = patient.BloodType.Value,
+            Gender = patient.Gender.Value,
+            Height = patient.Height.Value,
+            Weight = patient.Weight.Value,
+            IsActive = patient.IsActive
+        }));
+        return retVal;
+    }
+
+    public ICollection<AccountantDto>? AnonymiseAccountantsByPseudonymization(ICollection<Accountant>? accountants)
+    {
+        var retVal = new List<AccountantDto>();
+        retVal.AddRange(accountants!.Select(accountant => new AccountantDto
+        {
+            Id = accountant.Id.Value.ToString(),
+            Email = Lorem.Email(),
+            DateOfBirth = Lorem.DateTime(new DateTime(1950, 1, 1), new DateTime(2000, 1, 1)),
+            FirstName = GetRandomFirstName(),
+            Surname = GetRadnomSurname(),
+            PersonalNumber = GetRandomPersonalNumber(),
+            PhoneNumber = GetRandomPhoneNumber(),
+            Password = "password",
+            Username = GetRandomUsername()
+        }));
+        return retVal;
+    }
+
+    public ICollection<AdminDto>? AnonymiseAdminsByPseudonymization(ICollection<Admin>? admins)
+    {
+        var retVal = new List<AdminDto>();
+        retVal.AddRange(admins!.Select(admin => new AdminDto
+        {
+            Id = admin.Id.Value.ToString(),
+            Email = Lorem.Email(),
+            DateOfBirth = Lorem.DateTime(new DateTime(1950, 1, 1), new DateTime(2000, 1, 1)),
+            FirstName = GetRandomFirstName(),
+            Surname = GetRadnomSurname(),
+            PersonalNumber = GetRandomPersonalNumber(),
+            PhoneNumber = GetRandomPhoneNumber(),
+            Password = "password",
+            Username = GetRandomUsername(),
+        }));
+        return retVal;
+    }
+
     public ICollection<AccountDto>? AnonymiseAccountsByMasking(ICollection<Account>? accounts)
     {
         var retVal = new List<AccountDto>();
@@ -124,9 +245,7 @@ public class AnonymizationService : IAnonymizationService
             PhoneNumber = AnonymiseString(admin.PhoneNumber.Value),
             Password = "/",
             Username = admin.Username.Value
-        }
-        )
-            );
+        }));
         return retVal;
     }
 
@@ -448,6 +567,54 @@ public class AnonymizationService : IAnonymizationService
     private string AnonymiseString(string report)
     {
         return new Regex("\\S").Replace(report, "*");
+    }
+
+    private string GetRandomFirstName()
+    {
+        if (Lorem.Chance(50, 100))
+        {
+            return Constants.MaleNames.ElementAt((int)Lorem.Number(0, Constants.MaleNames.Count - 1));
+        }
+        else
+        {
+            return Constants.FemaleNames.ElementAt((int)Lorem.Number(0, Constants.FemaleNames.Count - 1));
+        }
+    }
+
+    private string GetRandomMaleFirstName()
+    {
+        return Constants.MaleNames.ElementAt((int)Lorem.Number(0, Constants.MaleNames.Count - 1));
+    }
+
+    private string GetRadnomFemaleFirstName()
+    {
+        return Constants.FemaleNames.ElementAt((int)Lorem.Number(0, Constants.FemaleNames.Count - 1));
+    }
+
+    private string GetRadnomSurname()
+    {
+        return Constants.Surnames.ElementAt((int)Lorem.Number(0, Constants.Surnames.Count - 1));
+    }
+
+    private string GetRandomPhoneNumber()
+    {
+        return $"+3816{gen.Next(100, 900)}{gen.Next(10, 99)}{gen.Next(100, 999)}";
+    }
+
+    private string GetRandomPersonalNumber()
+    {
+        return $"{gen.Next(100, 999)}{gen.Next(100, 999)}{gen.Next(100, 999)}{gen.Next(100, 999)}";
+    }
+
+    private string GetRandomUsername()
+    {
+        return $"{Lorem.Words(1, false)}{Lorem.Number(1, 100)}";
+    }
+
+    private string GetRandomAddress()
+    {
+        return $"{Constants.Towns.ElementAt((int)Lorem.Number(0, Constants.Towns.Count - 1))}," +
+            $" {Constants.Streets.ElementAt((int)Lorem.Number(0, Constants.Streets.Count - 1))} {Lorem.Number(0, 50)}";
     }
 
     private double RandomDoubleValue()
