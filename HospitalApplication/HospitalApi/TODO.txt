@@ -1,2 +1,0 @@
-﻿1. Pri registraciji novog korisnika provera da li je username unique - done
-2. Pri zakazivanju appointmenta provera da li je doktor ili pacijent zauzet tad.
