@@ -13,7 +13,7 @@ using HospitalApi.Validation;
 var builder = WebApplication.CreateBuilder(args);
 var config = builder.Configuration;
 
-builder.Services.AddAWSLambdaHosting(LambdaEventSource.HttpApi);
+builder.Services.AddAWSLambdaHosting(LambdaEventSource.HttpApi  );
 
 builder.Services.AddFastEndpoints();
 builder.Services.AddAuthenticationJWTBearer(builder.Configuration.GetSection("Secret:Token").Value);

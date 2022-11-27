@@ -174,7 +174,7 @@ public class AnonymizationService : IAnonymizationService
         retVal.AddRange(doctors!.Select(doctor => new DoctorDto
         {
             Id = doctor.Id.Value.ToString(),
-            Email = AnonymiseString(doctor.Email.Value),
+            Email = AnonymiseEmail(doctor.Email.Value),
             DateOfBirth = doctor.DateOfBirth.Value.ToDateTime(TimeOnly.MinValue),
             FirstName = AnonymiseString(doctor.FirstName.Value),
             Surname = AnonymiseString(doctor.Surname.Value),
@@ -194,7 +194,7 @@ public class AnonymizationService : IAnonymizationService
         retVal.AddRange(patients!.Select(patient => new PatientDto
         {
             Id = patient.Id.Value.ToString(),
-            Email = AnonymiseString(patient.Email.Value),
+            Email = AnonymiseEmail(patient.Email.Value),
             DateOfBirth = patient.DateOfBirth.Value.ToDateTime(TimeOnly.MinValue),
             FirstName = AnonymiseString(patient.FirstName.Value),
             Surname = AnonymiseString(patient.Surname.Value),
@@ -219,7 +219,7 @@ public class AnonymizationService : IAnonymizationService
         retVal.AddRange(accountants!.Select(accountant => new AccountantDto
         {
             Id = accountant.Id.Value.ToString(),
-            Email = AnonymiseString(accountant.Email.Value),
+            Email = AnonymiseEmail(accountant.Email.Value),
             DateOfBirth = accountant.DateOfBirth.Value.ToDateTime(TimeOnly.MinValue),
             FirstName = AnonymiseString(accountant.FirstName.Value),
             Surname = AnonymiseString(accountant.Surname.Value),
@@ -237,7 +237,7 @@ public class AnonymizationService : IAnonymizationService
         retVal.AddRange(admins!.Select(admin => new AdminDto
         {
             Id = admin.Id.Value.ToString(),
-            Email = AnonymiseString(admin.Email.Value),
+            Email = AnonymiseEmail(admin.Email.Value),
             DateOfBirth = admin.DateOfBirth.Value.ToDateTime(TimeOnly.MinValue),
             FirstName = AnonymiseString(admin.FirstName.Value),
             Surname = AnonymiseString(admin.Surname.Value),
@@ -254,7 +254,7 @@ public class AnonymizationService : IAnonymizationService
         return new DoctorResponse
         {
             Id = doctor.Id.Value,
-            Email = AnonymiseString(doctor.Email.Value),
+            Email = AnonymiseEmail(doctor.Email.Value),
             DateOfBirth = doctor.DateOfBirth.Value.ToDateTime(TimeOnly.MinValue),
             FirstName = doctor.FirstName.Value,
             Surname = doctor.Surname.Value,
@@ -271,7 +271,7 @@ public class AnonymizationService : IAnonymizationService
         return new DoctorResponse
         {
             Id = doctor.Id,
-            Email = AnonymiseString(doctor.Email),
+            Email = AnonymiseEmail(doctor.Email),
             DateOfBirth = doctor.DateOfBirth,
             FirstName = doctor.FirstName,
             Surname = doctor.Surname,
@@ -288,7 +288,7 @@ public class AnonymizationService : IAnonymizationService
         return new PatientResponse
         {
             Id = Guid.Parse(patient.Id.Value.ToString()),
-            Email = AnonymiseString(patient.Email.Value),
+            Email = AnonymiseEmail(patient.Email.Value),
             DateOfBirth = patient.DateOfBirth.Value.ToDateTime(TimeOnly.MinValue),
             FirstName = AnonymiseString(patient.FirstName.Value),
             Surname = AnonymiseString(patient.Surname.Value),
@@ -310,7 +310,7 @@ public class AnonymizationService : IAnonymizationService
         return new PatientResponse
         {
             Id = patient.Id,
-            Email = AnonymiseString(patient.Email),
+            Email = AnonymiseEmail(patient.Email),
             DateOfBirth = patient.DateOfBirth,
             FirstName = AnonymiseString(patient.FirstName),
             Surname = AnonymiseString(patient.Surname),
@@ -422,7 +422,7 @@ public class AnonymizationService : IAnonymizationService
         return new AccountantResponse
         {
             Id = accountant.Id.Value,
-            Email = AnonymiseString(accountant.Email.Value),
+            Email = AnonymiseEmail(accountant.Email.Value),
             DateOfBirth = accountant.DateOfBirth.Value.ToDateTime(TimeOnly.MinValue),
             FirstName = AnonymiseString(accountant.FirstName.Value),
             Surname = AnonymiseString(accountant.Surname.Value),
@@ -472,7 +472,7 @@ public class AnonymizationService : IAnonymizationService
         return new AdminResponse
         {
             Id = admin.Id.Value,
-            Email = AnonymiseString(admin.Email.Value),
+            Email = AnonymiseEmail(admin.Email.Value),
             DateOfBirth = admin.DateOfBirth.Value.ToDateTime(TimeOnly.MinValue),
             FirstName = AnonymiseString(admin.FirstName.Value),
             Surname = AnonymiseString(admin.Surname.Value),
@@ -487,7 +487,7 @@ public class AnonymizationService : IAnonymizationService
         return new AdminResponse
         {
             Id = admin.Id,
-            Email = AnonymiseString(admin.Email),
+            Email = AnonymiseEmail(admin.Email),
             DateOfBirth = admin.DateOfBirth,
             FirstName = AnonymiseString(admin.FirstName),
             Surname = AnonymiseString(admin.Surname),
@@ -563,11 +563,17 @@ public class AnonymizationService : IAnonymizationService
         }
         return response;
     }
-
     private string AnonymiseString(string report)
     {
         return new Regex("\\S").Replace(report, "*");
     }
+
+    private string AnonymiseEmail(string email)
+    {
+        var domain = email.Split('@');
+        return $"{AnonymiseString(domain[0])}@{domain[1]}";
+    }
+    
 
     private string GetRandomFirstName()
     {
