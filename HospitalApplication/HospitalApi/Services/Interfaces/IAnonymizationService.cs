@@ -37,5 +37,6 @@ public interface IAnonymizationService
     ICollection<AppointmentDto>? AnonymiseAppointmentsByPseudonymization(ICollection<Appointment>? appointments);
     ICollection<AccountDto>? AnonymiseAccountsByPseudonymization(ICollection<Account>? accounts);
     ICollection<AccountantDto>? AnonymiseAccountantsByPseudonymization(ICollection<Accountant>? accountants);
+    AccountsResponse AnonymiseMultipleAccountsForAccountant(AccountsResponse accounts);
 }
 

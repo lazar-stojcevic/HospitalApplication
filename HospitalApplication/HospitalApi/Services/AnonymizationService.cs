@@ -62,7 +62,7 @@ public class AnonymizationService : IAnonymizationService
             Email = Lorem.Email(),
             DateOfBirth = Lorem.DateTime(new DateTime(1950, 1, 1), new DateTime(2000, 1, 1)),
             FirstName = GetRandomFirstName(),
-            Surname = GetRadnomSurname(),
+            Surname = GetRandomSurname(),
             MedicalSpeciality = doctor.MedicalSpeciality.Value.ToString(),
             PersonalNumber = GetRandomPersonalNumber(),
             PhoneNumber = GetRandomPhoneNumber(),
@@ -81,8 +81,8 @@ public class AnonymizationService : IAnonymizationService
             Id = patient.Id.Value.ToString(),
             Email = Lorem.Email(),
             DateOfBirth = Lorem.DateTime(new DateTime(1950, 1, 1), new DateTime(2020, 1, 1)),
-            FirstName = patient.Gender.Value.Equals("Male") ? GetRandomMaleFirstName() : GetRadnomFemaleFirstName(),
-            Surname = GetRadnomSurname(),
+            FirstName = patient.Gender.Value.Equals("Male") ? GetRandomMaleFirstName() : GetRandomFemaleFirstName(),
+            Surname = GetRandomSurname(),
             PersonalNumber = GetRandomPersonalNumber(),
             PhoneNumber = GetRandomPhoneNumber(),
             Password = "password",
@@ -107,7 +107,7 @@ public class AnonymizationService : IAnonymizationService
             Email = Lorem.Email(),
             DateOfBirth = Lorem.DateTime(new DateTime(1950, 1, 1), new DateTime(2000, 1, 1)),
             FirstName = GetRandomFirstName(),
-            Surname = GetRadnomSurname(),
+            Surname = GetRandomSurname(),
             PersonalNumber = GetRandomPersonalNumber(),
             PhoneNumber = GetRandomPhoneNumber(),
             Password = "password",
@@ -125,7 +125,7 @@ public class AnonymizationService : IAnonymizationService
             Email = Lorem.Email(),
             DateOfBirth = Lorem.DateTime(new DateTime(1950, 1, 1), new DateTime(2000, 1, 1)),
             FirstName = GetRandomFirstName(),
-            Surname = GetRadnomSurname(),
+            Surname = GetRandomSurname(),
             PersonalNumber = GetRandomPersonalNumber(),
             PhoneNumber = GetRandomPhoneNumber(),
             Password = "password",
@@ -347,6 +347,23 @@ public class AnonymizationService : IAnonymizationService
             {
                 Id = account.Id,
                 AccountNumber = AnonymiseString(account.AccountNumber),
+                PatientId = account.PatientId,
+                Balance = account.Balance,
+                PatientUsername = AnonymiseString(account.PatientUsername ?? "")
+            });
+        }
+        return retVal;
+    }
+
+    public AccountsResponse AnonymiseMultipleAccountsForAccountant(AccountsResponse accounts)
+    {
+        var retVal = new AccountsResponse();
+        foreach (var account in accounts.Accounts)
+        {
+            retVal.Accounts.Add(new AccountResponse()
+            {
+                Id = account.Id,
+                AccountNumber = account.AccountNumber,
                 PatientId = account.PatientId,
                 Balance = account.Balance,
                 PatientUsername = AnonymiseString(account.PatientUsername ?? "")
@@ -592,12 +609,12 @@ public class AnonymizationService : IAnonymizationService
         return Constants.MaleNames.ElementAt((int)Lorem.Number(0, Constants.MaleNames.Count - 1));
     }
 
-    private string GetRadnomFemaleFirstName()
+    private string GetRandomFemaleFirstName()
     {
         return Constants.FemaleNames.ElementAt((int)Lorem.Number(0, Constants.FemaleNames.Count - 1));
     }
 
-    private string GetRadnomSurname()
+    private string GetRandomSurname()
     {
         return Constants.Surnames.ElementAt((int)Lorem.Number(0, Constants.Surnames.Count - 1));
     }

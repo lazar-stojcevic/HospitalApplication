@@ -49,6 +49,10 @@ public class GetAccountsWithPatientInfo : Endpoint<GetAccountsRequest, AccountsR
         {
             retVal = _anonymizationService.AnonymiseMultipleAccounts(retVal);
         }
+        else
+        {
+            retVal = _anonymizationService.AnonymiseMultipleAccountsForAccountant(retVal);
+        }
 
         await SendOkAsync(retVal, ct);
     }
